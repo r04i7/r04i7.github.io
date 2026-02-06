@@ -300,9 +300,13 @@ export default function App() {
             <a href="#experience" className="hover:text-emerald-400 transition-colors">EXPERIENCE</a>
             <a href="#contact" className="hover:text-emerald-400 transition-colors">CONTACT</a>
           </div>
-          <a href="#contact" className="px-4 py-2 border border-emerald-500/50 text-emerald-400 text-xs font-mono rounded hover:bg-emerald-500/10 transition-all">
-            DOWNLOAD_RESUME
-          </a>
+<a
+  href="/Rohit_Kumar_Resume.pdf"
+  download
+  className="px-4 py-2 border border-emerald-500/50 text-emerald-400 text-xs font-mono rounded hover:bg-emerald-500/10 transition"
+>
+  DOWNLOAD_RESUME
+</a>
         </div>
       </nav>
 
