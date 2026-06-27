@@ -1,200 +1,127 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Shield, 
-  Terminal, 
-  Cpu, 
-  Lock, 
-  Globe, 
-  ChevronRight, 
-  Github, 
-  Linkedin, 
-  Mail, 
+import {
+  Shield,
+  Terminal,
+  Cpu,
+  Lock,
+  ChevronRight,
+  Github,
+  Linkedin,
+  Mail,
   FileText,
   AlertTriangle,
   Server,
   ExternalLink,
   Award,
-  Trophy
+  Trophy,
+  Menu,
+  X,
+  Radio,
+  Wrench
 } from 'lucide-react';
 
 /**
- * SENIOR OFFENSIVE SECURITY PORTFOLIO
- * Updated with Real-World Resume Data & Hall of Fame
+ * SECURITY CONSOLE — Rohit Kumar Portfolio
+ * Styled after the tools of the trade (Burp Suite's amber/charcoal palette,
+ * SOC severity tagging) rather than Hollywood "matrix" hacker tropes.
  */
 
-// --- Components ---
+// --- Severity chip used throughout (mirrors real scanner output) ---
+const SEVERITY = {
+  CRITICAL: { label: 'CRITICAL', color: 'text-rose-400 bg-rose-500/10 border-rose-500/30' },
+  HIGH: { label: 'HIGH', color: 'text-amber-400 bg-amber-500/10 border-amber-500/30' },
+  MEDIUM: { label: 'MEDIUM', color: 'text-sky-400 bg-sky-500/10 border-sky-500/30' },
+  INFO: { label: 'INFO', color: 'text-slate-400 bg-slate-500/10 border-slate-500/30' },
+};
 
-const MatrixBackground = () => {
-  const canvasRef = useRef(null);
+const SeverityChip = ({ level }) => {
+  const s = SEVERITY[level] || SEVERITY.INFO;
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-mono font-bold tracking-wider ${s.color}`}>
+      {s.label}
+    </span>
+  );
+};
+
+// --- Recon panel: a simulated scan readout, the hero's "signature" element ---
+const ReconPanel = () => {
+  const lines = [
+    { t: 0, text: '$ recon --target rohit.kumar --mode passive' },
+    { t: 400, text: '[*] resolving identity...' },
+    { t: 900, text: '[+] role: Senior Associate @ PwC' },
+    { t: 1300, text: '[+] location: Kolkata, IN' },
+    { t: 1700, text: '[+] experience: 5+ yrs offensive security' },
+    { t: 2100, text: '[*] enumerating disclosures...' },
+    { t: 2500, text: '[+] CVE-2024-35581  CVE-2024-35582  CVE-2024-35583' },
+    { t: 2900, text: '[*] checking hall of fame acknowledgments...' },
+    { t: 3300, text: '[+] Cisco · IBM · Philips · Autodesk' },
+    { t: 3700, text: '[✓] scan complete — 0 false positives' },
+  ];
+  const [visible, setVisible] = useState([]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    const fontSize = 14;
-    const columns = Math.floor(window.innerWidth / fontSize);
-    const drops = new Array(columns).fill(1);
-    
-    const chars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    const draw = () => {
-      ctx.fillStyle = 'rgba(5, 5, 10, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = '#10b981'; // Tailwind emerald-500
-      ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-
-      for (let i = 0; i < drops.length; i++) {
-        const text = chars.charAt(Math.floor(Math.random() * chars.length));
-        
-        if (Math.random() > 0.95) {
-            ctx.fillStyle = '#ecfdf5'; 
-        } else {
-            ctx.fillStyle = '#059669'; 
-        }
-
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
-      
-      animationFrameId = requestAnimationFrame(draw);
-    };
-
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
-    };
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setVisible(lines.map(l => l.text));
+      return;
+    }
+    const timers = lines.map(l => setTimeout(() => {
+      setVisible(prev => [...prev, l.text]);
+    }, l.t));
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
-      className="fixed top-0 left-0 w-full h-full -z-10 opacity-20"
-    />
-  );
-};
-
-const InteractiveTerminal = () => {
-  const [history, setHistory] = useState([
-    { type: 'system', content: 'Initializing Rohit_OS v3.0.0 (Bengaluru Node)...' },
-    { type: 'system', content: 'Loading modules: [BLACK_DUCK] [SYNOPSYS] [CSCC_LABS]' },
-    { type: 'success', content: 'Identity Verified: Senior Security Consultant. Access Granted.' },
-  ]);
-  const [input, setInput] = useState('');
-  const bottomRef = useRef(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [history]);
-
-  const handleCommand = (e) => {
-    if (e.key === 'Enter') {
-      const cmd = input.trim().toLowerCase();
-      const newHistory = [...history, { type: 'user', content: input }];
-
-      switch (cmd) {
-        case 'help':
-          newHistory.push({ type: 'info', content: 'Available commands: whoami, cve, hof, certifications, contact, clear' });
-          break;
-        case 'whoami':
-          newHistory.push({ type: 'success', content: 'Rohit Kumar. Senior Security Consultant at Black Duck (Synopsys). Specializing in Mobile & Web App Security.' });
-          break;
-        case 'cve':
-          newHistory.push({ type: 'warning', content: 'Disclosed: CVE-2024-35581, CVE-2024-35582, CVE-2024-35583' });
-          break;
-        case 'hof':
-          newHistory.push({ type: 'success', content: 'Hall of Fame: Cisco, IBM, Philips, Autodesk' });
-          break;
-        case 'certifications':
-          newHistory.push({ type: 'info', content: '>> CEH (Certified Ethical Hacker)\n>> LPT (Licensed Penetration Tester)\n>> OSCP (Pursuing)' });
-          break;
-        case 'contact':
-          newHistory.push({ type: 'info', content: 'Opening secure channel... (Scroll to footer)' });
-          document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-          break;
-        case 'clear':
-          setHistory([]);
-          setInput('');
-          return;
-        default:
-          newHistory.push({ type: 'error', content: `Command not found: ${cmd}. Try "help".` });
-      }
-
-      setHistory(newHistory);
-      setInput('');
-    }
-  };
-
-  return (
-    <div className="w-full max-w-2xl mx-auto mt-8 bg-black/80 backdrop-blur-md border border-emerald-500/30 rounded-lg overflow-hidden shadow-2xl font-mono text-sm">
-      <div className="bg-emerald-900/20 p-2 border-b border-emerald-500/20 flex items-center gap-2">
-        <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
-        <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-        <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
-        <span className="ml-2 text-xs text-emerald-400 opacity-70">root@rohit-synopsys:~</span>
+    <div className="w-full bg-[#0B0F13] border border-amber-500/20 rounded-lg overflow-hidden shadow-2xl font-mono text-sm">
+      <div className="bg-[#15191D] px-4 py-2.5 border-b border-amber-500/15 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-rose-500/60"></div>
+          <div className="w-2.5 h-2.5 rounded-full bg-amber-500/60"></div>
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/60"></div>
+        </div>
+        <span className="text-[11px] text-slate-500 tracking-wide">recon_session_01.log</span>
       </div>
-      <div className="p-4 h-64 overflow-y-auto font-mono">
-        {history.map((line, i) => (
-          <div key={i} className={`mb-1 whitespace-pre-wrap ${
-            line.type === 'error' ? 'text-red-400' : 
-            line.type === 'success' ? 'text-emerald-400' : 
-            line.type === 'warning' ? 'text-yellow-400' :
-            line.type === 'user' ? 'text-white' : 'text-slate-400'
+      <div className="p-5 h-72 overflow-y-auto">
+        {visible.map((line, i) => (
+          <div key={i} className={`mb-1.5 ${
+            line.startsWith('[+]') ? 'text-amber-300' :
+            line.startsWith('[✓]') ? 'text-emerald-400' :
+            line.startsWith('$') ? 'text-slate-200' : 'text-slate-500'
           }`}>
-            {line.type === 'user' ? '> ' : ''}{line.content}
+            {line}
           </div>
         ))}
-        <div className="flex items-center text-emerald-500">
-          <span className="mr-2">{'>'}</span>
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleCommand}
-            className="bg-transparent border-none outline-none flex-1 text-white focus:ring-0"
-            autoFocus
-          />
-        </div>
-        <div ref={bottomRef}></div>
+        <span className="inline-block w-2 h-4 bg-amber-400 animate-pulse"></span>
       </div>
     </div>
   );
 };
 
-const SectionHeading = ({ children, icon: Icon }) => (
-  <div className="flex items-center gap-3 mb-8">
-    <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-      <Icon size={24} />
+const SectionHeading = ({ children, icon: Icon, eyebrow }) => (
+  <div className="mb-10">
+    {eyebrow && (
+      <div className="text-amber-500/70 text-xs font-mono tracking-[0.2em] mb-2 uppercase">{eyebrow}</div>
+    )}
+    <div className="flex items-center gap-3">
+      <Icon size={20} className="text-amber-500" />
+      <h2 className="text-2xl font-bold tracking-tight text-white">{children}</h2>
+      <div className="h-px bg-gradient-to-r from-amber-500/40 to-transparent flex-grow ml-2"></div>
     </div>
-    <h2 className="text-2xl font-bold tracking-wider text-white uppercase">{children}</h2>
-    <div className="h-px bg-emerald-500/30 flex-grow ml-4"></div>
   </div>
 );
 
-const SkillCard = ({ title, skills }) => (
-  <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700 p-6 rounded-xl hover:border-emerald-500/50 transition-all duration-300 hover:transform hover:-translate-y-1 group">
-    <h3 className="text-emerald-400 font-bold mb-4 flex items-center">
-      <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
-      {title}
-    </h3>
+const SkillModule = ({ title, skills, status = 'LOADED' }) => (
+  <div className="bg-[#0E1116] border border-slate-800 p-6 rounded-lg hover:border-amber-500/40 transition-colors duration-300">
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="text-slate-200 font-bold text-sm font-mono tracking-wide">{title}</h3>
+      <span className="text-[10px] font-mono text-emerald-400/80 flex items-center gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+        {status}
+      </span>
+    </div>
     <div className="flex flex-wrap gap-2">
       {skills.map(skill => (
-        <span key={skill} className="px-3 py-1 bg-emerald-900/20 text-emerald-100/80 text-xs rounded-full border border-emerald-500/20 font-mono">
+        <span key={skill} className="px-2.5 py-1 bg-slate-800/60 text-slate-300 text-xs rounded border border-slate-700 font-mono">
           {skill}
         </span>
       ))}
@@ -203,36 +130,54 @@ const SkillCard = ({ title, skills }) => (
 );
 
 const CveCard = ({ cve, link }) => (
-  <a 
-    href={link} 
-    target="_blank" 
+  <a
+    href={link}
+    target="_blank"
     rel="noreferrer"
-    className="flex items-center justify-between p-4 bg-slate-900/40 border border-slate-700 rounded-lg hover:border-red-500/50 hover:bg-red-900/10 transition-all group"
+    className="flex items-center justify-between p-4 bg-[#0E1116] border border-slate-800 rounded-lg hover:border-rose-500/40 hover:bg-rose-500/5 transition-all group"
   >
     <div className="flex items-center gap-3">
-      <AlertTriangle className="text-red-500 w-5 h-5" />
-      <span className="font-mono text-slate-200 font-bold">{cve}</span>
+      <AlertTriangle className="text-rose-400 w-5 h-5" />
+      <span className="font-mono text-slate-200 font-bold text-sm">{cve}</span>
+      <SeverityChip level="HIGH" />
     </div>
-    <div className="flex items-center text-xs text-slate-500 group-hover:text-red-400">
-      NVD DATABASE <ExternalLink className="w-3 h-3 ml-2" />
+    <div className="flex items-center text-xs text-slate-500 group-hover:text-rose-400">
+      NVD <ExternalLink className="w-3 h-3 ml-1.5" />
     </div>
   </a>
 );
 
-// --- Custom Brand Icons ---
+// Disclosure log entry — career history reframed as a security finding.
+// Severity is a playful self-portrait device, not a claim about real CVEs.
+const DisclosureEntry = ({ id, severity, dates, title, org, bullets, active }) => (
+  <div className={`relative pl-8 border-l ${active ? 'border-amber-500/40' : 'border-slate-800'}`}>
+    <div className={`absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full ${
+      active ? 'bg-amber-400 shadow-[0_0_10px_#f59e0b]' : 'bg-slate-700'
+    }`}></div>
+    <div className="flex items-center gap-3 mb-1 flex-wrap">
+      <span className="text-xs font-mono text-slate-500">{id}</span>
+      <SeverityChip level={severity} />
+      <span className={`text-sm font-mono ${active ? 'text-amber-400' : 'text-slate-500'}`}>{dates}</span>
+    </div>
+    <h3 className="text-xl font-bold text-white mt-1">{title}</h3>
+    <p className="text-slate-500 mb-4">{org}</p>
+    <ul className="list-disc list-inside space-y-2 text-slate-300 text-sm marker:text-amber-500/70">
+      {bullets.map((b, i) => <li key={i}>{b}</li>)}
+    </ul>
+  </div>
+);
+
 const BrandIcon = ({ brand }) => {
   switch (brand) {
     case 'Cisco':
       return (
         <svg viewBox="0 0 24 24" className="w-10 h-10 fill-current text-cyan-500 group-hover:text-cyan-400 transition-colors">
-           {/* Cisco Bridge Metaphor */}
-           <path d="M2 13v7a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1zm6-6v13a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1zm6-5v18a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1zm6 5v13a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1z" opacity="0.9" />
+          <path d="M2 13v7a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1zm6-6v13a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1zm6-5v18a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1zm6 5v13a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1z" opacity="0.9" />
         </svg>
       );
     case 'IBM':
       return (
         <svg viewBox="0 0 32 16" className="w-12 h-8 fill-current text-blue-500 group-hover:text-blue-400 transition-colors">
-          {/* Stylized IBM text block representation */}
           <rect x="0" y="0" width="8" height="2" rx="0.5" />
           <rect x="0" y="3" width="8" height="2" rx="0.5" />
           <rect x="0" y="6" width="8" height="2" rx="0.5" />
@@ -248,15 +193,13 @@ const BrandIcon = ({ brand }) => {
     case 'Philips':
       return (
         <svg viewBox="0 0 24 24" className="w-10 h-10 fill-current text-blue-600 group-hover:text-blue-400 transition-colors">
-           {/* Philips Shield Metaphor */}
-           <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm-2 16l-4-4 1.41-1.41L10 15.17l6.59-6.59L18 10l-8 8z" />
+          <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm-2 16l-4-4 1.41-1.41L10 15.17l6.59-6.59L18 10l-8 8z" />
         </svg>
       );
     case 'Autodesk':
       return (
         <svg viewBox="0 0 24 24" className="w-10 h-10 fill-current text-teal-500 group-hover:text-teal-400 transition-colors">
-           {/* Stylized 'A' Fold */}
-           <path d="M3 21h18v-2H3v2zm1.6-4h14.8l-1.8-3H6.4l-1.8 3zm5-8.4L12 3l2.4 5.6H9.6z" />
+          <path d="M3 21h18v-2H3v2zm1.6-4h14.8l-1.8-3H6.4l-1.8 3zm5-8.4L12 3l2.4 5.6H9.6z" />
         </svg>
       );
     default:
@@ -265,80 +208,116 @@ const BrandIcon = ({ brand }) => {
 };
 
 export default function App() {
-  const [loaded, setLoaded] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scanning, setScanning] = useState(true);
 
   useEffect(() => {
-    // Simulate boot sequence
-    const timer = setTimeout(() => setLoaded(true), 1500);
+    const timer = setTimeout(() => setScanning(false), 450);
     return () => clearTimeout(timer);
   }, []);
 
-  if (!loaded) {
+  if (scanning) {
     return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center font-mono text-emerald-500">
-        <div className="space-y-2">
-          <p className="animate-pulse">[ INITIALIZING SECURE ENVIRONMENT ]</p>
-          <p className="text-xs text-emerald-800">Loading profile data: Rohit_Resume.pdf...</p>
+      <div className="fixed inset-0 bg-[#06080A] flex items-center justify-center font-mono text-amber-400">
+        <div className="space-y-2 text-center">
+          <p className="animate-pulse text-sm tracking-widest">[ ESTABLISHING SECURE SESSION ]</p>
+          <p className="text-xs text-slate-600">loading rohit_kumar.profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-slate-300 font-sans selection:bg-emerald-500/30">
-      <MatrixBackground />
-      
+    <div className="min-h-screen bg-[#06080A] text-slate-300 font-sans selection:bg-amber-500/30">
+
       {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 bg-[#050505]/80 backdrop-blur-lg border-b border-emerald-900/30">
+      <nav className="fixed top-0 w-full z-50 bg-[#06080A]/85 backdrop-blur-lg border-b border-slate-800">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="font-mono text-emerald-500 font-bold text-xl tracking-tighter">
-            ./ROHIT_KUMAR
+          <div className="font-mono text-amber-400 font-bold text-lg tracking-tight flex items-center gap-2">
+            <Shield size={18} />
+            rohit_kumar
           </div>
           <div className="hidden md:flex gap-8 text-sm font-medium text-slate-400">
-            <a href="#about" className="hover:text-emerald-400 transition-colors">PROFILE</a>
-            <a href="#cves" className="hover:text-emerald-400 transition-colors">RESEARCH</a>
-            <a href="#experience" className="hover:text-emerald-400 transition-colors">EXPERIENCE</a>
-            <a href="#contact" className="hover:text-emerald-400 transition-colors">CONTACT</a>
+            <a href="#about" className="hover:text-amber-400 transition-colors">PROFILE</a>
+            <a href="#cves" className="hover:text-amber-400 transition-colors">RESEARCH</a>
+            <a href="#skills" className="hover:text-amber-400 transition-colors">SKILLS</a>
+            <a href="#experience" className="hover:text-amber-400 transition-colors">LOG</a>
+            <a href="#contact" className="hover:text-amber-400 transition-colors">CONTACT</a>
           </div>
-<a
-  href="/Rohit_Resume.pdf"
-  download
-  className="px-4 py-2 border border-emerald-500/50 text-emerald-400 text-xs font-mono rounded hover:bg-emerald-500/10 transition"
->
-  DOWNLOAD_RESUME
-</a>
+          <div className="hidden md:block">
+            <a
+              href="/Rohit_Resume.pdf"
+              download
+              className="px-4 py-2 border border-amber-500/40 text-amber-400 text-xs font-mono rounded hover:bg-amber-500/10 transition"
+            >
+              DOWNLOAD_RESUME
+            </a>
+          </div>
+          <button
+            className="md:hidden text-amber-400 p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+
+        {menuOpen && (
+          <div className="md:hidden bg-[#06080A] border-t border-slate-800 px-6 py-4 flex flex-col gap-4 text-sm font-medium text-slate-400">
+            <a href="#about" onClick={() => setMenuOpen(false)} className="hover:text-amber-400 transition-colors">PROFILE</a>
+            <a href="#cves" onClick={() => setMenuOpen(false)} className="hover:text-amber-400 transition-colors">RESEARCH</a>
+            <a href="#skills" onClick={() => setMenuOpen(false)} className="hover:text-amber-400 transition-colors">SKILLS</a>
+            <a href="#experience" onClick={() => setMenuOpen(false)} className="hover:text-amber-400 transition-colors">LOG</a>
+            <a href="#contact" onClick={() => setMenuOpen(false)} className="hover:text-amber-400 transition-colors">CONTACT</a>
+            <a
+              href="/Rohit_Resume.pdf"
+              download
+              className="px-4 py-2 border border-amber-500/40 text-amber-400 text-xs font-mono rounded hover:bg-amber-500/10 transition text-center"
+            >
+              DOWNLOAD_RESUME
+            </a>
+          </div>
+        )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono mb-6">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            BASED IN BENGALURU, INDIA
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
-            Senior Security <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">
-              Consultant
-            </span>
-          </h1>
-          
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Senior Application Security Engineer with 5+ years of experience specializing in web & mobile penetration testing, 
-            API security, and CVE research across banking and enterprise environments.
-          </p>
+      {/* Hero — two-pane console layout */}
+      <section className="pt-28 pb-16 px-6 relative z-10">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded border border-amber-500/25 bg-amber-500/5 text-amber-400 text-xs font-mono mb-6">
+              <Radio size={12} className="animate-pulse" />
+              SESSION_ACTIVE · KOLKATA, IN
+            </div>
 
-          <InteractiveTerminal />
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight leading-tight">
+              Rohit Kumar
+            </h1>
+            <p className="text-amber-400 font-mono text-sm mb-6 tracking-wide">
+              SENIOR ASSOCIATE · PwC — APPLICATION SECURITY
+            </p>
+
+            <p className="text-slate-400 max-w-xl mb-8 leading-relaxed">
+              I break web, mobile, and API applications for a living — then write the report
+              that gets them fixed. 5+ years across banking, e-commerce, and enterprise.
+              3 CVEs published. 240+ assessments delivered.
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <a href="#experience" className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-black text-sm font-bold rounded transition-colors">
+                View Disclosure Log <ChevronRight size={16} />
+              </a>
+              <a href="#contact" className="flex items-center gap-2 px-5 py-2.5 border border-slate-700 hover:border-amber-500/40 text-slate-300 text-sm font-medium rounded transition-colors">
+                Get In Touch
+              </a>
+            </div>
+          </div>
+
+          <ReconPanel />
         </div>
       </section>
 
-      {/* Stats/Quick Info */}
-      <div className="border-y border-emerald-900/30 bg-black/40 backdrop-blur-sm">
+      {/* Stats strip */}
+      <div className="border-y border-slate-800 bg-[#0A0D10]">
         <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
             { label: 'Total Exp', val: '5+ Years' },
@@ -348,48 +327,47 @@ export default function App() {
           ].map((stat, i) => (
             <div key={i}>
               <div className="text-3xl font-bold text-white mb-1 font-mono">{stat.val}</div>
-              <div className="text-xs text-emerald-500/70 uppercase tracking-widest">{stat.label}</div>
+              <div className="text-xs text-amber-500/70 uppercase tracking-widest">{stat.label}</div>
             </div>
           ))}
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-20 space-y-24">
-        
-        {/* Profile Section */}
+
+        {/* Profile */}
         <section id="about">
-          <SectionHeading icon={Shield}>Professional Profile</SectionHeading>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <SectionHeading icon={Shield} eyebrow="00 / Profile">Professional Profile</SectionHeading>
+          <div className="grid md:grid-cols-2 gap-12 items-start">
             <div className="space-y-6 text-slate-300 leading-relaxed">
               <p>
-                Currently serving as a <strong>Senior Security Consultant at Black Duck (Synopsys)</strong>. 
-                I possess a proven track record of identifying critical vulnerabilities and delivering executive-level 
-                remediation roadmaps for C-suite stakeholders.
+                Currently serving as a <strong className="text-white">Senior Associate at PwC</strong>.
+                I possess a proven track record of identifying critical vulnerabilities and delivering
+                executive-level remediation roadmaps for C-suite stakeholders.
               </p>
               <p>
-                My expertise spans identifying business logic flaws, broken access control, and zero-day class vulnerabilities 
-                within banking, fintech, and e-commerce sectors. I actively mentor junior consultants on OWASP methodologies 
-                and secure coding practices.
+                My expertise spans identifying business logic flaws, broken access control, and zero-day
+                class vulnerabilities within banking, fintech, and e-commerce sectors. I actively mentor
+                junior consultants on OWASP methodologies and secure coding practices.
               </p>
-              
-              <div className="flex gap-4 mt-6">
-                 <div className="flex items-center gap-2 text-emerald-400 border border-emerald-500/20 bg-emerald-500/5 px-4 py-2 rounded-lg">
-                    <Award size={16} />
-                    <span className="text-sm font-bold">CEH & LPT Certified</span>
-                 </div>
-                 <div className="flex items-center gap-2 text-slate-400 border border-slate-700 bg-slate-800/50 px-4 py-2 rounded-lg">
-                    <Award size={16} />
-                    <span className="text-sm">OSCP (Pursuing)</span>
-                 </div>
+              <div className="flex flex-wrap gap-3 mt-6">
+                <div className="flex items-center gap-2 text-amber-400 border border-amber-500/20 bg-amber-500/5 px-4 py-2 rounded">
+                  <Award size={16} />
+                  <span className="text-sm font-bold">CEH & LPT Certified</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-400 border border-slate-700 bg-slate-800/50 px-4 py-2 rounded">
+                  <Award size={16} />
+                  <span className="text-sm">OSCP (Pursuing)</span>
+                </div>
               </div>
             </div>
-            
-            <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-700 font-mono text-sm">
-              <div className="text-emerald-400 mb-2">// core_competencies.json</div>
-              <pre className="text-slate-400 overflow-x-auto whitespace-pre-wrap">
+
+            <div className="bg-[#0E1116] p-6 rounded-lg border border-slate-800 font-mono text-sm">
+              <div className="text-amber-400 mb-3 text-xs">// core_competencies.json</div>
+              <pre className="text-slate-400 overflow-x-auto whitespace-pre-wrap text-xs leading-relaxed">
 {`{
-  "role": "Senior AppSec Engineer",
-  "location": "Bengaluru, Karnataka",
+  "role": "Senior Associate, PwC",
+  "location": "Kolkata, West Bengal",
   "education": "B.Tech Computer Engineering",
   "key_skills": [
     "Web/Mobile VAPT",
@@ -404,168 +382,190 @@ export default function App() {
           </div>
         </section>
 
-        {/* CVE Research & Hall of Fame Section */}
+        {/* CVE Research */}
         <section id="cves">
-          <SectionHeading icon={AlertTriangle}>Vulnerability Research & Honors</SectionHeading>
-          
+          <SectionHeading icon={AlertTriangle} eyebrow="01 / Research">Vulnerability Research &amp; Honors</SectionHeading>
+
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="space-y-4">
               <p className="text-slate-400 mb-6">
-                Actively involved in zero-day vulnerability research in web applications and open-source software. 
-                Discovered and responsibly disclosed the following vulnerabilities published in MITRE and NVD databases.
+                Actively involved in zero-day vulnerability research in web applications and
+                open-source software. Discovered and responsibly disclosed the following
+                vulnerabilities, published in MITRE and NVD databases.
               </p>
               <CveCard cve="CVE-2024-35581" link="https://nvd.nist.gov/vuln/detail/CVE-2024-35581" />
               <CveCard cve="CVE-2024-35582" link="https://nvd.nist.gov/vuln/detail/CVE-2024-35582" />
               <CveCard cve="CVE-2024-35583" link="https://nvd.nist.gov/vuln/detail/CVE-2024-35583" />
             </div>
-            <div className="bg-gradient-to-br from-red-900/10 to-transparent border border-red-900/30 p-8 rounded-xl flex flex-col justify-center">
-                <h3 className="text-xl font-bold text-white mb-2">Research Focus</h3>
-                <ul className="space-y-3 text-slate-400 mt-4 list-disc list-inside">
-                    <li>Business Logic Abuse</li>
-                    <li>Broken Authentication Mechanisms</li>
-                    <li>Insecure Object References (IDOR)</li>
-                    <li>Zero-day Exploitation in OSS</li>
-                </ul>
+            <div className="bg-gradient-to-br from-rose-500/5 to-transparent border border-rose-500/20 p-8 rounded-lg flex flex-col justify-center">
+              <h3 className="text-xl font-bold text-white mb-2">Research Focus</h3>
+              <ul className="space-y-3 text-slate-400 mt-4 list-disc list-inside">
+                <li>Business Logic Abuse</li>
+                <li>Broken Authentication Mechanisms</li>
+                <li>Insecure Object References (IDOR)</li>
+                <li>Zero-day Exploitation in OSS</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Tools Built */}
+          <div className="grid md:grid-cols-2 gap-6 mb-16">
+            <div className="bg-[#0E1116] border border-amber-500/15 p-6 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Wrench size={14} className="text-amber-400" />
+                <h4 className="text-amber-400 font-bold font-mono text-sm">burp_extender.py</h4>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Internal Burp Suite extension built at PwC to help the assessment team manage and
+                track flagged/hidden issues, streamlining the vulnerability triage workflow.
+              </p>
+            </div>
+            <div className="bg-[#0E1116] border border-amber-500/15 p-6 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Wrench size={14} className="text-amber-400" />
+                <h4 className="text-amber-400 font-bold font-mono text-sm">session_cookie_finder.py</h4>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Custom tool to identify session management weaknesses and surface session
+                cookie issues during web application assessments.
+              </p>
             </div>
           </div>
 
           {/* Hall of Fame */}
-          <div className="mt-16 pt-8 border-t border-slate-800">
-             <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                <div className="p-2 bg-amber-500/10 rounded-lg text-amber-500">
-                  <Trophy size={24} /> 
+          <div className="pt-8 border-t border-slate-800">
+            <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+              <div className="p-2 bg-amber-500/10 rounded text-amber-500">
+                <Trophy size={22} />
+              </div>
+              Hall of Fame Acknowledgments
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[
+                { name: 'Cisco', color: 'border-cyan-500/30 hover:bg-cyan-500/5' },
+                { name: 'IBM', color: 'border-blue-500/30 hover:bg-blue-500/5' },
+                { name: 'Philips', color: 'border-blue-600/30 hover:bg-blue-500/5' },
+                { name: 'Autodesk', color: 'border-teal-500/30 hover:bg-teal-500/5' }
+              ].map((company) => (
+                <div key={company.name} className={`flex flex-col items-center justify-center p-8 bg-[#0E1116] border ${company.color} rounded-lg transition-all group cursor-default h-40`}>
+                  <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    <BrandIcon brand={company.name} />
+                  </div>
+                  <span className="font-bold text-slate-300 group-hover:text-white transition-colors">{company.name}</span>
                 </div>
-                Hall of Fame Acknowledgments
-             </h3>
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { name: 'Cisco', color: 'border-cyan-500/30 hover:bg-cyan-900/10' }, 
-                  { name: 'IBM', color: 'border-blue-500/30 hover:bg-blue-900/10' }, 
-                  { name: 'Philips', color: 'border-blue-600/30 hover:bg-blue-900/10' }, 
-                  { name: 'Autodesk', color: 'border-teal-500/30 hover:bg-teal-900/10' }
-                ].map((company) => (
-                    <div key={company.name} className={`flex flex-col items-center justify-center p-8 bg-slate-900/30 border ${company.color} rounded-xl transition-all group cursor-default h-40`}>
-                        <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                            <BrandIcon brand={company.name} />
-                        </div>
-                        <span className="font-bold text-slate-300 group-hover:text-white transition-colors">{company.name}</span>
-                    </div>
-                ))}
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Skills Grid */}
+        {/* Skills */}
         <section id="skills">
-          <SectionHeading icon={Cpu}>Technical Capabilities</SectionHeading>
+          <SectionHeading icon={Cpu} eyebrow="02 / Capabilities">Technical Capabilities</SectionHeading>
           <div className="grid md:grid-cols-3 gap-6">
-            <SkillCard 
-              title="Security Testing" 
-              skills={['Web App VAPT', 'Mobile (iOS/Android)', 'API Security', 'Network Security', 'Source Code Analysis']} 
+            <SkillModule
+              title="security_testing"
+              skills={['Web App VAPT', 'Mobile (iOS/Android)', 'API Security', 'Network Security', 'Source Code Analysis']}
             />
-            <SkillCard 
-              title="Tools" 
-              skills={['Burp Suite Pro', 'OWASP ZAP', 'Postman', 'MobSF', 'Frida', 'Objection', 'Metasploit', 'JADX']} 
+            <SkillModule
+              title="tools"
+              skills={['Burp Suite Pro', 'OWASP ZAP', 'Postman', 'MobSF', 'Frida', 'Objection', 'Metasploit', 'JADX']}
             />
-            <SkillCard 
-              title="Standards" 
-              skills={['OWASP Top 10', 'OWASP Mobile Top 10', 'CWE/SANS 25', 'SOC2', 'GDPR', 'Secure SDLC']} 
+            <SkillModule
+              title="standards"
+              skills={['OWASP Top 10', 'OWASP Mobile Top 10', 'CWE/SANS 25', 'SOC2', 'GDPR', 'Secure SDLC']}
             />
           </div>
         </section>
 
-        {/* Experience / Log */}
+        {/* Disclosure Log (career history) */}
         <section id="experience">
-          <SectionHeading icon={FileText}>Career Trajectory</SectionHeading>
+          <SectionHeading icon={FileText} eyebrow="03 / Log">Disclosure Log</SectionHeading>
+          <p className="text-slate-500 text-xs font-mono mb-10 -mt-4">
+            Note: Synopsys Software Integrity Group (SIG) was divested and became Black Duck
+            Software in 2024 — ADV-002 and ADV-003 reflect one continuous tenure through that
+            transition.
+          </p>
           <div className="space-y-10">
-            
-            {/* Job 1 */}
-            <div className="relative pl-8 border-l border-emerald-500/20">
-              <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></div>
-              <div className="mb-1 text-sm text-emerald-500 font-mono">Mar 2025 - Present</div>
-              <h3 className="text-xl font-bold text-white">Senior Security Consultant</h3>
-              <p className="text-slate-500 mb-4">Black Duck (Synopsys) · Bengaluru</p>
-              <ul className="list-disc list-inside space-y-2 text-slate-300 text-sm marker:text-emerald-500">
-                <li>Directing end-to-end security assessments for enterprise clients (Web, Mobile, API).</li>
-                <li>Executing advanced iOS/Android testing on 40+ apps, finding critical auth bypasses.</li>
-                <li>Mentoring a team of 5 junior consultants on vulnerability exploitation.</li>
-                <li>Designing scalable testing frameworks in Python/Bash, reducing manual time by 30%.</li>
-              </ul>
-            </div>
-
-            {/* Job 2 */}
-            <div className="relative pl-8 border-l border-emerald-500/20">
-              <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-slate-600"></div>
-              <div className="mb-1 text-sm text-slate-500 font-mono">Sep 2024 - Mar 2025</div>
-              <h3 className="text-xl font-bold text-white">Security Consultant</h3>
-              <p className="text-slate-500 mb-4">Black Duck (Synopsys) · Bengaluru</p>
-              <ul className="list-disc list-inside space-y-2 text-slate-300 text-sm marker:text-slate-500">
-                <li>Executed 80+ web assessments for banking/fintech (IDOR, XXE, SQLi).</li>
-                <li>Completed 50+ REST/GraphQL API tests, uncovering business logic flaws.</li>
-                <li>Collaborated with 10+ dev teams to integrate security into CI/CD pipelines.</li>
-              </ul>
-            </div>
-
-            {/* Job 3 */}
-            <div className="relative pl-8 border-l border-emerald-500/20">
-              <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-slate-600"></div>
-              <div className="mb-1 text-sm text-slate-500 font-mono">Mar 2022 - Sep 2024</div>
-              <h3 className="text-xl font-bold text-white">Security Service Associate</h3>
-              <p className="text-slate-500 mb-4">Synopsys Inc · Bengaluru</p>
-              <ul className="list-disc list-inside space-y-2 text-slate-300 text-sm marker:text-slate-500">
-                <li>Orchestrated 160+ web app tests and 70+ mobile audits (e-commerce/healthcare).</li>
-                <li>Conducted threat modeling for 30+ cloud-native apps, reducing attack surface by 40%.</li>
-                <li>Discovered and reported 3 CVEs (published in MITRE/NVD).</li>
-              </ul>
-            </div>
-
-            {/* Job 4 */}
-            <div className="relative pl-8 border-l border-emerald-500/20">
-              <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-slate-600"></div>
-              <div className="mb-1 text-sm text-slate-500 font-mono">Jul 2021 - Mar 2022</div>
-              <h3 className="text-xl font-bold text-white">Cyber Security Analyst</h3>
-              <p className="text-slate-500 mb-4">CSCC LABS · Hyderabad</p>
-              <ul className="list-disc list-inside space-y-2 text-slate-300 text-sm marker:text-slate-500">
-                <li>Managed engagements for 40+ web applications.</li>
-                <li>Spearheaded forensic analysis for security breaches, reducing resolution time by 50%.</li>
-              </ul>
-            </div>
-
+            <DisclosureEntry
+              id="ADV-001" severity="CRITICAL" dates="Mar 2026 – Present" active
+              title="Senior Associate" org="PwC · Kolkata"
+              bullets={[
+                'Conducting web, Android, iOS, and API penetration testing and source code analysis (SCA) for enterprise clients.',
+                'Built an internal Burp Suite extender tool to help the team manage and track flagged/hidden issues, streamlining triage.',
+                'Developed a session cookie analysis tool to identify session management weaknesses during assessments.',
+              ]}
+            />
+            <DisclosureEntry
+              id="ADV-002" severity="HIGH" dates="Mar 2025 – Mar 2026"
+              title="Senior Security Consultant" org="Black Duck (Synopsys) · Bengaluru"
+              bullets={[
+                'Directed end-to-end security assessments for enterprise clients (Web, Mobile, API).',
+                'Executed advanced iOS/Android testing on 40+ apps, finding critical auth bypasses.',
+                'Mentored a team of 5 junior consultants on vulnerability exploitation.',
+                'Designed scalable testing frameworks in Python/Bash, reducing manual time by 30%.',
+              ]}
+            />
+            <DisclosureEntry
+              id="ADV-003" severity="HIGH" dates="Sep 2024 – Mar 2025"
+              title="Security Consultant" org="Black Duck (Synopsys) · Bengaluru"
+              bullets={[
+                'Executed 80+ web assessments for banking/fintech (IDOR, XXE, SQLi).',
+                'Completed 50+ REST/GraphQL API tests, uncovering business logic flaws.',
+                'Collaborated with 10+ dev teams to integrate security into CI/CD pipelines.',
+              ]}
+            />
+            <DisclosureEntry
+              id="ADV-004" severity="MEDIUM" dates="Mar 2022 – Sep 2024"
+              title="Security Service Associate" org="Synopsys Inc · Bengaluru"
+              bullets={[
+                'Orchestrated 160+ web app tests and 70+ mobile audits (e-commerce/healthcare).',
+                'Conducted threat modeling for 30+ cloud-native apps, reducing attack surface by 40%.',
+                'Discovered and reported 3 CVEs (published in MITRE/NVD).',
+              ]}
+            />
+            <DisclosureEntry
+              id="ADV-005" severity="INFO" dates="Jul 2021 – Mar 2022"
+              title="Cyber Security Analyst" org="CSCC Labs · Hyderabad"
+              bullets={[
+                'Managed engagements for 40+ web applications.',
+                'Spearheaded forensic analysis for security breaches, reducing resolution time by 50%.',
+              ]}
+            />
           </div>
         </section>
 
         {/* Contact */}
         <section id="contact">
-          <SectionHeading icon={Terminal}>Initiate Communication</SectionHeading>
-          <div className="bg-gradient-to-r from-emerald-900/20 to-slate-900/40 border border-emerald-500/20 rounded-2xl p-8 md:p-12 text-center">
+          <SectionHeading icon={Terminal} eyebrow="04 / Contact">Initiate Communication</SectionHeading>
+          <div className="bg-gradient-to-r from-amber-500/5 to-[#0E1116] border border-amber-500/15 rounded-xl p-8 md:p-12 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">Ready to Secure Your Infrastructure?</h3>
             <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-              Currently available for consulting engagements and security leadership roles. 
+              Currently open to security leadership roles and select consulting engagements.
             </p>
-            
+
             <div className="flex flex-col md:flex-row justify-center gap-4">
-              <a href="mailto:er.rohitkumar1410@gmail.com" className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-all shadow-lg shadow-emerald-900/20">
+              <a href="mailto:er.rohitkumar1410@gmail.com" className="flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded transition-colors">
                 <Mail size={18} />
                 Email Me
               </a>
-              <a href="https://linkedin.com/in/rohitkumar384" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-all border border-slate-700">
+              <a href="https://linkedin.com/in/rohitkumar384" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded transition-all border border-slate-700">
                 <Linkedin size={18} />
                 LinkedIn
               </a>
-              <a href="https://github.com/r04i7" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg transition-all border border-slate-700">
+              <a href="https://github.com/r04i7" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded transition-all border border-slate-700">
                 <Github size={18} />
                 GitHub
               </a>
             </div>
             <div className="mt-8 text-slate-500 text-sm font-mono">
-                Phone: +91 6290342545 (IN)
+              Phone: +91 6290342545 (IN)
             </div>
           </div>
         </section>
 
       </div>
 
-      <footer className="border-t border-slate-800 bg-[#020202] py-12">
+      <footer className="border-t border-slate-800 bg-[#040506] py-12">
         <div className="max-w-6xl mx-auto px-6 text-center text-slate-600 text-sm">
           <p className="mb-2">&copy; 2026 Rohit Kumar. All rights reserved.</p>
           <div className="flex justify-center gap-4 mt-4">
