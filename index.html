@@ -7,7 +7,7 @@
   <meta name="description" content="Rohit Kumar — Senior Application Security Engineer specializing in web, mobile, and API penetration testing, source code analysis, and CVE research. Currently a Senior Associate at PwC. 3 published CVEs, 5+ years experience." />
   <meta name="keywords" content="Application Security Engineer, Penetration Tester, CVE Researcher, OSCP, CEH, Web Security, Mobile Security, API Security, Rohit Kumar" />
   <meta name="author" content="Rohit Kumar" />
-  <meta name="theme-color" content="#080c14" />
+  <meta name="theme-color" content="#05070a" />
   <meta property="og:title" content="Rohit Kumar | Senior Application Security Engineer" />
   <meta property="og:description" content="Web, mobile, and API security expert with 3 published CVEs and 5+ years of experience across banking, e-commerce, and enterprise environments." />
   <meta property="og:type" content="website" />
@@ -18,22 +18,25 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="canonical" href="https://r04i7.github.io/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #080c14;
-      --bg2:       #0d1220;
-      --bg3:       #111827;
-      --card:      #131929;
-      --border:    #1e2d47;
-      --cyan:      #00d4ff;
-      --cyan2:     #00a8cc;
-      --green:     #00ff88;
-      --text:      #e2e8f0;
-      --muted:     #64748b;
-      --accent:    #f59e0b;
+      --bg:        #05070a;
+      --bg2:       #080c12;
+      --bg3:       #0c1219;
+      --card:      #0a0f17;
+      --border:    #16233a;
+      --border2:   #1e3252;
+      --cyan:      #00e5ff;
+      --green:     #00ff9c;
+      --green-dim: #0a3d2a;
+      --pink:      #ff2e88;
+      --text:      #cde4dd;
+      --muted:     #5c7385;
+      --accent:    #ffb020;
+      --mono:      'JetBrains Mono', 'Share Tech Mono', monospace;
     }
 
     html { scroll-behavior: smooth; }
@@ -44,47 +47,83 @@
       color: var(--text);
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
     }
 
+    /* ── MATRIX RAIN CANVAS ── */
+    #matrix {
+      position: fixed; inset: 0; z-index: 0;
+      opacity: .32; pointer-events: none;
+    }
+
+    /* ── CRT SCANLINES + VIGNETTE ── */
+    .crt-overlay {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(0,0,0,0) 0px,
+          rgba(0,0,0,0) 2px,
+          rgba(0,20,15,.16) 3px,
+          rgba(0,0,0,0) 4px);
+      mix-blend-mode: overlay;
+    }
+    .crt-overlay::after {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(ellipse 100% 80% at 50% 40%, transparent 55%, rgba(0,0,0,.55) 100%);
+    }
+    .flicker { animation: flicker 6s infinite; }
+    @keyframes flicker {
+      0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.85} 94%{opacity:1} 96%{opacity:.9} 97%{opacity:1}
+    }
+
+    .wrap { position: relative; z-index: 3; }
+
     /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg2); }
-    ::-webkit-scrollbar-thumb { background: var(--cyan2); border-radius: 3px; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--green); }
+    ::selection { background: var(--green); color: #001a10; }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; width: 100%; z-index: 100;
-      padding: 1rem 2rem;
+      position: fixed; top: 0; width: 100%; z-index: 50;
+      padding: .9rem 2rem;
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(8,12,20,0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(5,7,10,0.8);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
       transition: all .3s;
     }
     .nav-logo {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1rem; font-weight: 500;
-      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--green);
+      text-shadow: 0 0 12px rgba(0,255,156,.5);
     }
-    .nav-logo span { color: var(--green); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-logo span { color: var(--cyan); }
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; }
     .nav-links a {
-      color: var(--muted); text-decoration: none; font-size: .875rem;
+      color: var(--muted); text-decoration: none; font-size: .82rem;
       font-weight: 500; letter-spacing: .03em;
-      transition: color .2s;
+      font-family: var(--mono);
+      transition: color .2s, text-shadow .2s;
     }
-    .nav-links a:hover { color: var(--cyan); }
+    .nav-links a::before { content:'./'; color: var(--border2); }
+    .nav-links a:hover { color: var(--green); text-shadow: 0 0 10px rgba(0,255,156,.6); }
     .nav-cta {
       padding: .45rem 1.1rem;
       background: transparent;
-      border: 1px solid var(--cyan);
-      color: var(--cyan);
-      border-radius: 6px;
-      font-size: .8rem; font-weight: 600;
+      border: 1px solid var(--green);
+      color: var(--green);
+      border-radius: 4px;
+      font-size: .78rem; font-weight: 700;
+      font-family: var(--mono);
       text-decoration: none;
       transition: all .2s;
     }
-    .nav-cta:hover { background: var(--cyan); color: var(--bg); }
+    .nav-cta:hover { background: var(--green); color: #001a10; box-shadow: 0 0 18px rgba(0,255,156,.5); }
     .nav-resume-mobile { display: none; }
 
     /* ── HERO ── */
@@ -94,156 +133,190 @@
       position: relative; overflow: hidden;
       padding: 6rem 2rem 2rem;
     }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,.07) 0%, transparent 70%),
-                  radial-gradient(ellipse 40% 40% at 80% 80%, rgba(0,255,136,.04) 0%, transparent 60%);
-    }
     .grid-lines {
-      position: absolute; inset: 0;
+      position: absolute; inset: 0; z-index: 0;
       background-image:
-        linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
-      background-size: 60px 60px;
+        linear-gradient(rgba(0,229,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 30%, transparent 80%);
     }
     .hero-content {
       position: relative; z-index: 1;
-      max-width: 760px; text-align: center;
+      max-width: 820px; width: 100%;
     }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: .5rem;
-      padding: .35rem .9rem;
-      background: rgba(0,212,255,.08);
-      border: 1px solid rgba(0,212,255,.25);
-      border-radius: 99px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .78rem; color: var(--cyan);
-      margin-bottom: 1.5rem;
+
+    /* terminal window */
+    .terminal {
+      background: rgba(6,10,14,.82);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      box-shadow: 0 0 60px rgba(0,255,156,.06), inset 0 0 0 1px rgba(0,255,156,.03);
+      overflow: hidden;
+      backdrop-filter: blur(2px);
     }
-    .hero-badge::before { content: '●'; color: var(--green); font-size: .6rem; animation: blink 1.5s infinite; }
-    @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:.2 } }
+    .terminal-bar {
+      display: flex; align-items: center; gap: .5rem;
+      padding: .6rem .9rem;
+      background: rgba(12,18,25,.9);
+      border-bottom: 1px solid var(--border);
+    }
+    .tdot { width: 11px; height: 11px; border-radius: 50%; }
+    .tdot.r { background:#ff5f56; } .tdot.y { background:#ffbd2e; } .tdot.g { background:#27c93f; }
+    .terminal-title {
+      margin-left: .6rem; font-family: var(--mono);
+      font-size: .74rem; color: var(--muted);
+    }
+    .terminal-body { padding: 1.75rem 1.75rem 2rem; font-family: var(--mono); }
+    .prompt-line { font-size: .8rem; color: var(--muted); margin-bottom: .4rem; }
+    .prompt-line .usr { color: var(--green); }
+    .prompt-line .path { color: var(--cyan); }
+    #bootLog { min-height: 1.1rem; font-size: .78rem; color: var(--green); margin-bottom: 1.1rem; }
+    #bootLog .ok { color: var(--muted); }
+
     h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 800; line-height: 1.1;
-      letter-spacing: -.02em;
-      margin-bottom: .5rem;
+      font-family: var(--mono);
+      font-size: clamp(2.1rem, 6vw, 4rem);
+      font-weight: 700; line-height: 1.05;
+      letter-spacing: -.01em;
+      margin: .3rem 0 .6rem;
+      position: relative;
     }
-    .name-gradient {
-      background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .glitch {
+      color: #fff; position: relative; display: inline-block;
+      text-shadow: 0 0 18px rgba(0,255,156,.35);
     }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute; left: 0; top: 0; width: 100%;
+      overflow: hidden;
+    }
+    .glitch::before { color: var(--cyan); animation: glitchTop 3s infinite linear alternate-reverse; clip-path: inset(0 0 62% 0); }
+    .glitch::after  { color: var(--pink); animation: glitchBot 2.4s infinite linear alternate-reverse; clip-path: inset(58% 0 0 0); }
+    @keyframes glitchTop { 0%{transform:translate(0)} 20%{transform:translate(-2px,-1px)} 40%{transform:translate(-1px,1px)} 60%{transform:translate(2px,-1px)} 80%{transform:translate(1px,0)} 100%{transform:translate(0)} }
+    @keyframes glitchBot { 0%{transform:translate(0)} 25%{transform:translate(2px,1px)} 50%{transform:translate(-2px,0)} 75%{transform:translate(1px,-1px)} 100%{transform:translate(0)} }
+
     .hero-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(.9rem, 2vw, 1.15rem);
-      color: var(--cyan); font-weight: 500;
-      margin-bottom: 1.5rem;
+      font-family: var(--mono);
+      font-size: clamp(.85rem, 2vw, 1.1rem);
+      color: var(--green); font-weight: 500;
+      margin-bottom: 1.25rem; min-height: 1.4em;
     }
+    .hero-title .cursor { color: var(--cyan); animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
     .hero-desc {
-      font-size: 1.05rem; color: var(--muted);
-      max-width: 600px; margin: 0 auto 2.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem; color: var(--muted);
+      max-width: 640px; margin: 0 0 1.75rem;
       line-height: 1.75;
     }
-    .hero-cves {
-      display: flex; justify-content: center; gap: .6rem;
-      flex-wrap: wrap; margin-bottom: 2.5rem;
-    }
+    .hero-desc strong { color: var(--text); }
+    .hero-cves { display: flex; gap: .55rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
     .cve-tag {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: .72rem; padding: .3rem .7rem;
-      background: rgba(245,158,11,.1);
-      border: 1px solid rgba(245,158,11,.3);
-      color: var(--accent); border-radius: 4px;
+      background: rgba(255,46,136,.08);
+      border: 1px solid rgba(255,46,136,.35);
+      color: var(--pink); border-radius: 4px;
+      text-decoration: none; transition: all .2s;
     }
-    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .cve-tag:hover { background: rgba(255,46,136,.18); box-shadow: 0 0 14px rgba(255,46,136,.3); }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
     .btn-primary {
-      padding: .8rem 2rem;
-      background: var(--cyan); color: var(--bg);
-      border: none; border-radius: 8px;
-      font-weight: 700; font-size: .9rem;
+      padding: .8rem 1.8rem;
+      background: var(--green); color: #001a10;
+      border: none; border-radius: 6px;
+      font-weight: 700; font-size: .85rem; font-family: var(--mono);
       text-decoration: none; cursor: pointer;
       transition: all .2s;
     }
-    .btn-primary:hover { background: #00b8d9; transform: translateY(-2px); }
+    .btn-primary:hover { box-shadow: 0 0 24px rgba(0,255,156,.55); transform: translateY(-2px); }
     .btn-outline {
-      padding: .8rem 2rem;
+      padding: .8rem 1.8rem;
       background: transparent; color: var(--text);
-      border: 1px solid var(--border); border-radius: 8px;
-      font-weight: 600; font-size: .9rem;
+      border: 1px solid var(--border2); border-radius: 6px;
+      font-weight: 600; font-size: .85rem; font-family: var(--mono);
       text-decoration: none; cursor: pointer;
       transition: all .2s;
     }
-    .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); transform: translateY(-2px); }
+
     .hero-stats {
-      display: flex; justify-content: center; gap: 3rem;
-      margin-top: 4rem; padding-top: 2rem;
+      display: flex; gap: 2.5rem;
+      margin-top: 2.5rem; padding-top: 1.75rem;
       border-top: 1px solid var(--border);
       flex-wrap: wrap;
     }
-    .stat { text-align: center; }
-    .stat-num { font-size: 2rem; font-weight: 800; color: var(--cyan); }
-    .stat-label { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .stat-num { font-size: 1.7rem; font-weight: 700; font-family: var(--mono); color: var(--green); text-shadow: 0 0 14px rgba(0,255,156,.3); }
+    .stat-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-family: var(--mono); }
 
     /* ── SECTIONS ── */
-    section { padding: 5rem 2rem; }
+    section { padding: 5.5rem 2rem; position: relative; }
     .container { max-width: 1100px; margin: 0 auto; }
     .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .78rem; color: var(--cyan);
-      text-transform: uppercase; letter-spacing: .15em;
-      margin-bottom: .75rem;
+      font-family: var(--mono);
+      font-size: .78rem; color: var(--green);
+      letter-spacing: .05em; margin-bottom: .75rem;
     }
+    .section-label::before { content:'$ '; color: var(--cyan); }
     .section-title {
-      font-size: clamp(1.75rem, 4vw, 2.5rem);
-      font-weight: 800; line-height: 1.2;
+      font-family: var(--mono);
+      font-size: clamp(1.6rem, 4vw, 2.3rem);
+      font-weight: 700; line-height: 1.2;
       margin-bottom: 1rem;
     }
-    .section-title span { color: var(--cyan); }
+    .section-title span { color: var(--green); }
     .section-divider {
-      width: 48px; height: 3px;
-      background: linear-gradient(90deg, var(--cyan), transparent);
-      border-radius: 2px; margin-bottom: 3rem;
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--green), transparent);
+      margin-bottom: 3rem;
+      box-shadow: 0 0 10px rgba(0,255,156,.6);
     }
 
     /* ── ABOUT ── */
     #about { background: var(--bg2); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
     .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1.25rem; font-size: .95rem; }
+    .about-text strong { color: var(--text); }
+    .about-text .hl { color: var(--pink); }
     .about-highlights { display: flex; flex-direction: column; gap: .75rem; margin-top: 1.5rem; }
     .highlight-item {
       display: flex; align-items: center; gap: .75rem;
       padding: .75rem 1rem;
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 8px; font-size: .875rem;
+      border-radius: 6px; font-size: .875rem;
+      font-family: var(--mono);
     }
-    .highlight-icon { color: var(--cyan); font-size: 1rem; flex-shrink: 0; }
+    .highlight-icon { color: var(--green); }
     .about-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px; padding: 2rem;
+      border-radius: 10px; padding: 1.75rem;
     }
+    .about-card:hover { border-color: var(--border2); }
     .about-card-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .78rem; color: var(--cyan);
-      text-transform: uppercase; letter-spacing: .1em;
-      margin-bottom: 1.25rem;
+      font-family: var(--mono);
+      font-size: .78rem; color: var(--green);
+      letter-spacing: .1em; margin-bottom: 1.25rem;
     }
+    .about-card-title::before { content:'// '; color: var(--muted); }
     .cert-list { display: flex; flex-direction: column; gap: .6rem; }
     .cert-item {
       display: flex; align-items: center; gap: .6rem;
       padding: .6rem .75rem;
-      background: var(--bg3); border-radius: 6px;
+      background: var(--bg3); border-radius: 5px;
       font-size: .85rem;
     }
     .cert-badge {
-      padding: .2rem .5rem;
-      border-radius: 4px; font-size: .65rem; font-weight: 700;
-      text-transform: uppercase;
+      padding: .2rem .5rem; border-radius: 3px;
+      font-size: .62rem; font-weight: 700;
+      text-transform: uppercase; font-family: var(--mono);
     }
-    .cert-active { background: rgba(0,255,136,.15); color: var(--green); }
-    .cert-pursuing { background: rgba(245,158,11,.15); color: var(--accent); }
+    .cert-active { background: rgba(0,255,156,.14); color: var(--green); }
+    .cert-pursuing { background: rgba(255,176,32,.14); color: var(--accent); }
     .contact-info { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
-    .contact-row { display: flex; align-items: center; gap: .6rem; font-size: .85rem; color: var(--muted); }
+    .contact-row { display: flex; align-items: center; gap: .6rem; font-size: .84rem; color: var(--muted); font-family: var(--mono); }
     .contact-row a { color: var(--cyan); text-decoration: none; }
     .contact-row a:hover { text-decoration: underline; }
 
@@ -251,100 +324,160 @@
     #experience { background: var(--bg); }
     .timeline { position: relative; }
     .timeline::before {
-      content: '';
-      position: absolute; left: 0; top: 0; bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, var(--cyan), transparent);
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(180deg, var(--green), transparent);
     }
-    .timeline-item {
-      padding-left: 2.5rem; margin-bottom: 2.5rem; position: relative;
-    }
+    .timeline-item { padding-left: 2.5rem; margin-bottom: 2.25rem; position: relative; }
     .timeline-dot {
-      position: absolute; left: -5px; top: 6px;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
+      position: absolute; left: -5px; top: 8px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 12px var(--green);
     }
     .timeline-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.5rem;
-      transition: border-color .2s;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.5rem;
+      transition: border-color .2s, box-shadow .2s;
     }
-    .timeline-card:hover { border-color: rgba(0,212,255,.4); }
-    .timeline-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
+    .timeline-card:hover { border-color: var(--border2); box-shadow: 0 0 26px rgba(0,229,255,.06); }
+    .timeline-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; flex-wrap: wrap; }
     .timeline-company { font-weight: 700; font-size: 1rem; color: var(--text); }
-    .timeline-role { color: var(--cyan); font-size: .875rem; font-weight: 600; margin-top: .15rem; }
+    .timeline-role { color: var(--green); font-size: .85rem; font-weight: 600; margin-top: .15rem; font-family: var(--mono); }
     .timeline-date {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem; color: var(--muted);
-      background: var(--bg3); padding: .25rem .6rem;
-      border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+      font-family: var(--mono); font-size: .72rem; color: var(--muted);
+      background: var(--bg3); padding: .25rem .6rem; border-radius: 4px;
+      white-space: nowrap; flex-shrink: 0;
     }
     .timeline-bullets { list-style: none; margin-top: .75rem; }
     .timeline-bullets li {
-      padding: .3rem 0 .3rem 1.25rem;
-      position: relative; font-size: .875rem; color: var(--muted);
-      line-height: 1.6;
+      padding: .3rem 0 .3rem 1.4rem; position: relative;
+      font-size: .875rem; color: var(--muted); line-height: 1.6;
     }
-    .timeline-bullets li::before {
-      content: '→'; position: absolute; left: 0;
-      color: var(--cyan); font-size: .75rem;
-    }
+    .timeline-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--green); font-size: .8rem; }
 
     /* ── SKILLS ── */
     #skills { background: var(--bg2); }
     .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
     .skill-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.5rem;
-      transition: border-color .2s, transform .2s;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.5rem;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
     }
-    .skill-card:hover { border-color: rgba(0,212,255,.4); transform: translateY(-3px); }
-    .skill-card-icon { font-size: 1.75rem; margin-bottom: .75rem; }
-    .skill-card-title { font-weight: 700; font-size: .95rem; margin-bottom: .75rem; color: var(--text); }
+    .skill-card:hover { border-color: var(--green); transform: translateY(-3px); box-shadow: 0 0 24px rgba(0,255,156,.08); }
+    .skill-card-icon { font-size: 1.6rem; margin-bottom: .75rem; }
+    .skill-card-title { font-weight: 700; font-size: .95rem; margin-bottom: .75rem; color: var(--text); font-family: var(--mono); }
     .skill-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
     .skill-tag {
-      padding: .25rem .6rem;
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 4px; font-size: .72rem; color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
+      padding: .25rem .6rem; background: var(--bg3);
+      border: 1px solid var(--border); border-radius: 4px;
+      font-size: .72rem; color: var(--muted); font-family: var(--mono);
     }
+    .skill-tag:hover { color: var(--green); border-color: var(--border2); }
+
+    /* ── ADVISORIES / CVE ── */
+    #advisories { background: var(--bg); }
+    .adv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.5rem; }
+    .adv-card {
+      background: var(--card);
+      border: 1px solid rgba(255,46,136,.28);
+      border-radius: 10px; padding: 1.5rem;
+      display: flex; flex-direction: column;
+      transition: all .2s; position: relative; overflow: hidden;
+    }
+    .adv-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, var(--pink), transparent);
+    }
+    .adv-card:hover { border-color: var(--pink); transform: translateY(-4px); box-shadow: 0 0 30px rgba(255,46,136,.12); }
+    .adv-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .9rem; }
+    .adv-id { font-family: var(--mono); font-size: .82rem; font-weight: 700; color: var(--pink); }
+    .adv-sev {
+      font-family: var(--mono); font-size: .62rem; font-weight: 700;
+      padding: .2rem .55rem; border-radius: 3px; text-transform: uppercase;
+      background: rgba(255,46,136,.14); color: var(--pink); border: 1px solid rgba(255,46,136,.35);
+    }
+    .adv-title { font-weight: 700; font-size: .96rem; margin-bottom: .5rem; color: var(--text); }
+    .adv-meta { font-family: var(--mono); font-size: .72rem; color: var(--muted); margin-bottom: .75rem; }
+    .adv-desc { font-size: .85rem; color: var(--muted); line-height: 1.6; flex: 1; }
+    .adv-links { display: flex; gap: .75rem; margin-top: 1.1rem; flex-wrap: wrap; }
+    .adv-link {
+      font-family: var(--mono); font-size: .74rem; text-decoration: none;
+      color: var(--green); border: 1px solid var(--border2);
+      padding: .4rem .8rem; border-radius: 5px; transition: all .2s;
+    }
+    .adv-link:hover { border-color: var(--green); background: rgba(0,255,156,.08); box-shadow: 0 0 14px rgba(0,255,156,.2); }
+    .adv-link.ext { color: var(--cyan); }
+    .adv-link.ext:hover { border-color: var(--cyan); background: rgba(0,229,255,.08); }
+
+    /* ── HALL OF FAME ── */
+    #hall-of-fame { background: var(--bg2); }
+    .hof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.5rem; }
+    .hof-card {
+      background: var(--card);
+      border: 1px solid rgba(255,176,32,.28);
+      border-radius: 10px; padding: 1.6rem;
+      display: flex; flex-direction: column;
+      transition: all .2s; position: relative; overflow: hidden;
+    }
+    .hof-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+    .hof-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 0 30px rgba(255,176,32,.12); }
+    .hof-head { display: flex; align-items: center; gap: .9rem; margin-bottom: 1rem; }
+    .hof-mark {
+      width: 46px; height: 46px; flex-shrink: 0;
+      border-radius: 8px; display: grid; place-items: center;
+      font-family: var(--mono); font-weight: 700; font-size: 1.05rem;
+      color: var(--accent); background: rgba(255,176,32,.1);
+      border: 1px solid rgba(255,176,32,.35);
+    }
+    .hof-org { font-weight: 700; font-size: 1.05rem; color: var(--text); }
+    .hof-prog { font-family: var(--mono); font-size: .74rem; color: var(--accent); margin-top: .15rem; }
+    .hof-desc { font-size: .85rem; color: var(--muted); line-height: 1.6; flex: 1; }
+    .hof-foot { margin-top: 1.1rem; }
+    .hof-link {
+      font-family: var(--mono); font-size: .74rem; text-decoration: none;
+      color: var(--accent); border: 1px solid rgba(255,176,32,.35);
+      padding: .4rem .8rem; border-radius: 5px; transition: all .2s; display: inline-block;
+    }
+    .hof-link:hover { border-color: var(--accent); background: rgba(255,176,32,.08); box-shadow: 0 0 14px rgba(255,176,32,.2); }
+    .hof-static {
+      font-family: var(--mono); font-size: .7rem; color: var(--muted);
+      border: 1px dashed var(--border2); padding: .4rem .8rem; border-radius: 5px; display: inline-block;
+    }
+    .hof-static::before { content: '✔ '; color: var(--green); }
 
     /* ── PROJECTS ── */
     #projects { background: var(--bg); }
     .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
     .project-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.75rem;
-      display: flex; flex-direction: column;
-      transition: all .2s;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.75rem;
+      display: flex; flex-direction: column; transition: all .2s;
     }
-    .project-card:hover { border-color: rgba(0,212,255,.4); transform: translateY(-4px); }
+    .project-card:hover { border-color: var(--cyan); transform: translateY(-4px); box-shadow: 0 0 26px rgba(0,229,255,.08); }
+    .project-card.featured { border-color: rgba(0,255,156,.35); }
+    .project-card.featured:hover { border-color: var(--green); box-shadow: 0 0 30px rgba(0,255,156,.12); }
+    .bapp-badge {
+      display: inline-flex; align-items: center;
+      font-family: var(--mono); font-size: .68rem; font-weight: 700;
+      color: var(--green); background: rgba(0,255,156,.08);
+      border: 1px solid rgba(0,255,156,.35); border-radius: 4px;
+      padding: .22rem .55rem; margin-bottom: .6rem;
+      letter-spacing: .02em;
+    }
     .project-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
-    .project-icon { font-size: 1.5rem; }
-    .project-links { display: flex; gap: .5rem; }
-    .project-link {
-      color: var(--muted); text-decoration: none; font-size: .85rem;
-      transition: color .2s;
-    }
-    .project-link:hover { color: var(--cyan); }
-    .project-title { font-weight: 700; font-size: 1rem; margin-bottom: .5rem; }
+    .project-icon { font-size: 1.4rem; }
+    .project-link { color: var(--muted); text-decoration: none; font-size: .95rem; transition: color .2s; }
+    .project-link:hover { color: var(--green); }
+    .project-title { font-weight: 700; font-size: 1rem; margin-bottom: .5rem; font-family: var(--mono); }
     .project-desc { font-size: .875rem; color: var(--muted); line-height: 1.65; flex: 1; }
     .project-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.25rem; }
     .project-tag {
-      padding: .2rem .6rem;
-      background: rgba(0,212,255,.08);
-      border: 1px solid rgba(0,212,255,.2);
-      border-radius: 4px; font-size: .7rem; color: var(--cyan);
+      padding: .2rem .6rem; background: rgba(0,229,255,.07);
+      border: 1px solid rgba(0,229,255,.2); border-radius: 4px;
+      font-size: .7rem; color: var(--cyan); font-family: var(--mono);
     }
-    .cve-highlight {
-      border-color: rgba(245,158,11,.3) !important;
-    }
-    .cve-highlight:hover { border-color: rgba(245,158,11,.6) !important; }
 
     /* ── CONTACT ── */
     #contact { background: var(--bg2); }
@@ -355,24 +488,24 @@
       display: flex; align-items: center; gap: 1rem;
       padding: 1rem 1.25rem;
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; text-decoration: none; color: var(--text);
+      border-radius: 8px; text-decoration: none; color: var(--text);
       transition: all .2s;
     }
-    .contact-link-item:hover { border-color: var(--cyan); color: var(--cyan); transform: translateX(4px); }
-    .contact-link-icon { font-size: 1.25rem; flex-shrink: 0; }
-    .contact-link-info { display: flex; flex-direction: column; }
-    .contact-link-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
-    .contact-link-value { font-size: .9rem; font-weight: 600; }
+    .contact-link-item:hover { border-color: var(--green); color: var(--green); transform: translateX(4px); }
+    .contact-link-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .contact-link-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-family: var(--mono); }
+    .contact-link-value { font-size: .88rem; font-weight: 600; font-family: var(--mono); }
     .contact-form { display: flex; flex-direction: column; gap: 1rem; }
     .form-group { display: flex; flex-direction: column; gap: .4rem; }
-    .form-label { font-size: .8rem; color: var(--muted); font-weight: 500; }
+    .form-label { font-size: .78rem; color: var(--muted); font-weight: 500; font-family: var(--mono); }
+    .form-label::before { content:'> '; color: var(--green); }
     .form-input, .form-textarea {
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 8px; padding: .75rem 1rem;
-      color: var(--text); font-family: 'Inter', sans-serif; font-size: .9rem;
-      transition: border-color .2s; outline: none;
+      border-radius: 6px; padding: .75rem 1rem; color: var(--text);
+      font-family: var(--mono); font-size: .88rem;
+      transition: border-color .2s, box-shadow .2s; outline: none;
     }
-    .form-input:focus, .form-textarea:focus { border-color: var(--cyan); }
+    .form-input:focus, .form-textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,255,156,.08); }
     .form-textarea { resize: vertical; min-height: 120px; }
     .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
 
@@ -380,20 +513,18 @@
     footer {
       background: var(--bg); border-top: 1px solid var(--border);
       padding: 2rem; text-align: center;
-      color: var(--muted); font-size: .8rem;
+      color: var(--muted); font-size: .8rem; font-family: var(--mono);
     }
-    footer a { color: var(--cyan); text-decoration: none; }
+    footer a { color: var(--green); text-decoration: none; }
+    footer .sig { color: var(--muted); font-size: .72rem; margin-top:.5rem; }
 
     /* ── ANIMATIONS ── */
-    .fade-up {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity .6s ease, transform .6s ease;
-    }
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
     /* ── MOBILE ── */
     .hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; }
-    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: all .3s; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--green); border-radius: 2px; transition: all .3s; }
 
     @media (max-width: 768px) {
       .hamburger { display: flex; }
@@ -401,68 +532,74 @@
       .nav-links.open { display: flex; }
       .nav-cta { display: none; }
       .nav-resume-mobile { display: block; }
-      .nav-resume-mobile a { color: var(--cyan); font-weight: 700; }
+      .nav-resume-mobile a { color: var(--green); font-weight: 700; font-family: var(--mono); }
       .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
       .hero-stats { gap: 1.5rem; }
+      .terminal-body { padding: 1.25rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .glitch::before, .glitch::after, .flicker { animation: none !important; }
+      #matrix { display: none; }
     }
   </style>
 </head>
 <body>
 
+<canvas id="matrix"></canvas>
+<div class="crt-overlay flicker"></div>
+
+<div class="wrap">
+
 <!-- ── NAV ── -->
 <nav id="navbar">
-  <div class="nav-logo">&lt;<span>RK</span> /&gt;</div>
+  <div class="nav-logo">&lt;<span>r04i7</span>/&gt;</div>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li class="nav-resume-mobile"><a href="Rohit_Resume.pdf" download>↓ Resume</a></li>
+    <li><a href="#about">about</a></li>
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#advisories">advisories</a></li>
+    <li><a href="#hall-of-fame">hall-of-fame</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#contact">contact</a></li>
+    <li class="nav-resume-mobile"><a href="Rohit_Resume.pdf" download>↓ resume</a></li>
   </ul>
-  <a href="Rohit_Resume.pdf" download class="nav-cta">↓ Resume</a>
-  <button class="hamburger" id="hamburger" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <a href="Rohit_Resume.pdf" download class="nav-cta">↓ resume.pdf</a>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <!-- ── HERO ── -->
 <section id="hero">
-  <div class="hero-bg"></div>
   <div class="grid-lines"></div>
   <div class="hero-content">
-    <div class="hero-badge">Available for opportunities</div>
-    <h1><span class="name-gradient">Rohit Kumar</span></h1>
-    <div class="hero-title" id="typedTitle"></div>
-    <p class="hero-desc">
-      Senior Application Security Engineer with 5+ years securing enterprise systems across web, mobile, and API platforms. Currently at <strong style="color:var(--text)">PwC</strong> — building tools, breaking things (legally), and making software safer.
-    </p>
-    <div class="hero-cves">
-      <span class="cve-tag">CVE-2024-35581</span>
-      <span class="cve-tag">CVE-2024-35582</span>
-      <span class="cve-tag">CVE-2024-35583</span>
-    </div>
-    <div class="hero-btns">
-      <a href="Rohit_Resume.pdf" download class="btn-primary">↓ Download Resume</a>
-      <a href="#contact" class="btn-outline">Get In Touch</a>
-      <a href="#experience" class="btn-outline">View Experience</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat">
-        <div class="stat-num">5+</div>
-        <div class="stat-label">Years Experience</div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>
+        <span class="terminal-title">rohit@appsec:~ — bash — 80×24</span>
       </div>
-      <div class="stat">
-        <div class="stat-num">3</div>
-        <div class="stat-label">CVEs Published</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">300+</div>
-        <div class="stat-label">Assessments Done</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">200+</div>
-        <div class="stat-label">Devs Trained</div>
+      <div class="terminal-body">
+        <div class="prompt-line"><span class="usr">rohit@appsec</span>:<span class="path">~</span>$ ./whoami --init</div>
+        <div id="bootLog"></div>
+        <h1><span class="glitch" data-text="Rohit Kumar">Rohit Kumar</span></h1>
+        <div class="hero-title" id="typedTitle"></div>
+        <p class="hero-desc">
+          Senior Application Security Engineer with 5+ years securing enterprise systems across web, mobile, and API platforms. Currently at <strong>PwC</strong> — building tooling, breaking things (legally), and making software safer.
+        </p>
+        <div class="hero-cves">
+          <a href="cve-2024-35581.html" class="cve-tag">CVE-2024-35581</a>
+          <a href="cve-2024-35581.html" class="cve-tag">CVE-2024-35582</a>
+          <a href="cve-2024-35581.html" class="cve-tag">CVE-2024-35583</a>
+        </div>
+        <div class="hero-btns">
+          <a href="Rohit_Resume.pdf" download class="btn-primary">↓ download_resume</a>
+          <a href="#advisories" class="btn-outline">./view_advisories</a>
+          <a href="#contact" class="btn-outline">./contact</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Years Exp</div></div>
+          <div class="stat"><div class="stat-num">3</div><div class="stat-label">CVEs Published</div></div>
+          <div class="stat"><div class="stat-num">300+</div><div class="stat-label">Assessments</div></div>
+          <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Devs Trained</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -471,7 +608,7 @@
 <!-- ── ABOUT ── -->
 <section id="about">
   <div class="container">
-    <p class="section-label">01 / About</p>
+    <p class="section-label">cat about.txt</p>
     <h2 class="section-title">Who I <span>Am</span></h2>
     <div class="section-divider"></div>
     <div class="about-grid">
@@ -480,20 +617,20 @@
           I'm a Senior Application Security Engineer specializing in web application penetration testing, iOS/Android mobile security, API assessments, and source code analysis (SCA). With over 5 years across banking, e-commerce, and enterprise environments, I bridge the gap between offensive security findings and practical remediation.
         </p>
         <p>
-          Currently a <strong style="color:var(--text)">Senior Associate at PwC</strong>, I build internal security automation tools alongside conducting comprehensive assessments. Previously at Black Duck (Synopsys), I led teams, mentored junior consultants, and delivered executive-level security roadmaps to C-suite stakeholders.
+          Currently a <strong>Senior Associate at PwC</strong>, I build internal security automation tooling alongside conducting comprehensive assessments. Previously at Black Duck (Synopsys), I led teams, mentored junior consultants, and delivered executive-level security roadmaps to C-suite stakeholders.
         </p>
         <p>
-          My proudest achievement: discovering and responsibly disclosing 3 CVEs — <span style="color:var(--accent)">CVE-2024-35581, CVE-2024-35582, CVE-2024-35583</span> — now published in the MITRE and NVD databases.
+          My proudest achievement: discovering and responsibly disclosing 3 CVEs — <span class="hl">CVE-2024-35581, CVE-2024-35582, CVE-2024-35583</span> — now published in the MITRE and NVD databases.
         </p>
         <div class="about-highlights">
-          <div class="highlight-item"><span class="highlight-icon">📍</span> Kolkata, West Bengal, India</div>
-          <div class="highlight-item"><span class="highlight-icon">🎓</span> B.Tech Computer Engineering — Punjab Technical University (2020)</div>
-          <div class="highlight-item"><span class="highlight-icon">🔐</span> OSCP (Pursuing) · CEH · LPT</div>
+          <div class="highlight-item"><span class="highlight-icon">◈</span> Kolkata, West Bengal, India</div>
+          <div class="highlight-item"><span class="highlight-icon">◈</span> B.Tech Computer Engineering — Punjab Technical University (2020)</div>
+          <div class="highlight-item"><span class="highlight-icon">◈</span> OSCP (Pursuing) · CEH · LPT</div>
         </div>
       </div>
       <div class="fade-up" style="transition-delay:.15s">
         <div class="about-card">
-          <div class="about-card-title">Certifications</div>
+          <div class="about-card-title">certifications</div>
           <div class="cert-list">
             <div class="cert-item"><span class="cert-badge cert-pursuing">Pursuing</span> Offensive Security Certified Professional (OSCP)</div>
             <div class="cert-item"><span class="cert-badge cert-active">Active</span> Certified Ethical Hacker (CEH)</div>
@@ -501,12 +638,12 @@
           </div>
         </div>
         <div class="about-card" style="margin-top:1rem">
-          <div class="about-card-title">Contact & Links</div>
+          <div class="about-card-title">contact &amp; links</div>
           <div class="contact-info">
-            <div class="contact-row">📧 <a href="mailto:er.rohitkumar1410@gmail.com">er.rohitkumar1410@gmail.com</a></div>
-            <div class="contact-row">📞 <a href="tel:+916290342545">+91 6290342545</a></div>
-            <div class="contact-row">💼 <a href="https://linkedin.com/in/rohitkumar384" target="_blank">linkedin.com/in/rohitkumar384</a></div>
-            <div class="contact-row">💻 <a href="https://github.com/r04i7" target="_blank">github.com/r04i7</a></div>
+            <div class="contact-row">◇ <a href="mailto:er.rohitkumar1410@gmail.com">er.rohitkumar1410@gmail.com</a></div>
+            <div class="contact-row">◇ <a href="tel:+916290342545">+91 6290342545</a></div>
+            <div class="contact-row">◇ <a href="https://linkedin.com/in/rohitkumar384" target="_blank" rel="noopener">linkedin.com/in/rohitkumar384</a></div>
+            <div class="contact-row">◇ <a href="https://github.com/r04i7" target="_blank" rel="noopener">github.com/r04i7</a></div>
           </div>
         </div>
       </div>
@@ -517,7 +654,7 @@
 <!-- ── EXPERIENCE ── -->
 <section id="experience">
   <div class="container">
-    <p class="section-label">02 / Experience</p>
+    <p class="section-label">git log --experience</p>
     <h2 class="section-title">Where I've <span>Worked</span></h2>
     <div class="section-divider"></div>
     <div class="timeline">
@@ -526,10 +663,7 @@
         <div class="timeline-dot"></div>
         <div class="timeline-card">
           <div class="timeline-header">
-            <div>
-              <div class="timeline-company">PwC</div>
-              <div class="timeline-role">Senior Associate</div>
-            </div>
+            <div><div class="timeline-company">PwC</div><div class="timeline-role">Senior Associate</div></div>
             <div class="timeline-date">Mar 2026 – Present</div>
           </div>
           <ul class="timeline-bullets">
@@ -545,10 +679,7 @@
         <div class="timeline-dot"></div>
         <div class="timeline-card">
           <div class="timeline-header">
-            <div>
-              <div class="timeline-company">Black Duck (Synopsys)</div>
-              <div class="timeline-role">Senior Security Consultant</div>
-            </div>
+            <div><div class="timeline-company">Black Duck (Synopsys)</div><div class="timeline-role">Senior Security Consultant</div></div>
             <div class="timeline-date">Mar 2025 – Mar 2026</div>
           </div>
           <ul class="timeline-bullets">
@@ -565,10 +696,7 @@
         <div class="timeline-dot"></div>
         <div class="timeline-card">
           <div class="timeline-header">
-            <div>
-              <div class="timeline-company">Black Duck (Synopsys)</div>
-              <div class="timeline-role">Security Consultant</div>
-            </div>
+            <div><div class="timeline-company">Black Duck (Synopsys)</div><div class="timeline-role">Security Consultant</div></div>
             <div class="timeline-date">Sep 2024 – Mar 2025</div>
           </div>
           <ul class="timeline-bullets">
@@ -585,10 +713,7 @@
         <div class="timeline-dot"></div>
         <div class="timeline-card">
           <div class="timeline-header">
-            <div>
-              <div class="timeline-company">Synopsys Inc.</div>
-              <div class="timeline-role">Security Service Associate</div>
-            </div>
+            <div><div class="timeline-company">Synopsys Inc.</div><div class="timeline-role">Security Service Associate</div></div>
             <div class="timeline-date">Mar 2022 – Sep 2024</div>
           </div>
           <ul class="timeline-bullets">
@@ -605,10 +730,7 @@
         <div class="timeline-dot"></div>
         <div class="timeline-card">
           <div class="timeline-header">
-            <div>
-              <div class="timeline-company">CSCC Labs</div>
-              <div class="timeline-role">Cyber Security Analyst</div>
-            </div>
+            <div><div class="timeline-company">CSCC Labs</div><div class="timeline-role">Cyber Security Analyst</div></div>
             <div class="timeline-date">Jul 2021 – Mar 2022</div>
           </div>
           <ul class="timeline-bullets">
@@ -623,10 +745,7 @@
         <div class="timeline-dot"></div>
         <div class="timeline-card">
           <div class="timeline-header">
-            <div>
-              <div class="timeline-company">CSCC Labs</div>
-              <div class="timeline-role">Cyber Security Intern</div>
-            </div>
+            <div><div class="timeline-company">CSCC Labs</div><div class="timeline-role">Cyber Security Intern</div></div>
             <div class="timeline-date">Feb 2021 – Jul 2021</div>
           </div>
           <ul class="timeline-bullets">
@@ -642,7 +761,7 @@
 <!-- ── SKILLS ── -->
 <section id="skills">
   <div class="container">
-    <p class="section-label">03 / Skills</p>
+    <p class="section-label">ls -la ./arsenal</p>
     <h2 class="section-title">Technical <span>Arsenal</span></h2>
     <div class="section-divider"></div>
     <div class="skills-grid">
@@ -650,56 +769,126 @@
         <div class="skill-card-icon">🎯</div>
         <div class="skill-card-title">Security Testing</div>
         <div class="skill-tags">
-          <span class="skill-tag">Web App Pentesting</span>
-          <span class="skill-tag">iOS Security</span>
-          <span class="skill-tag">Android Security</span>
-          <span class="skill-tag">API Security</span>
-          <span class="skill-tag">VAPT</span>
-          <span class="skill-tag">Source Code Analysis</span>
-          <span class="skill-tag">Network Security</span>
-          <span class="skill-tag">Threat Modeling</span>
+          <span class="skill-tag">Web App Pentesting</span><span class="skill-tag">iOS Security</span>
+          <span class="skill-tag">Android Security</span><span class="skill-tag">API Security</span>
+          <span class="skill-tag">VAPT</span><span class="skill-tag">Source Code Analysis</span>
+          <span class="skill-tag">Network Security</span><span class="skill-tag">Threat Modeling</span>
         </div>
       </div>
       <div class="skill-card fade-up" style="transition-delay:.1s">
         <div class="skill-card-icon">🛠️</div>
-        <div class="skill-card-title">Tools & Frameworks</div>
+        <div class="skill-card-title">Tools &amp; Frameworks</div>
         <div class="skill-tags">
-          <span class="skill-tag">Burp Suite Pro</span>
-          <span class="skill-tag">OWASP ZAP</span>
-          <span class="skill-tag">Metasploit</span>
-          <span class="skill-tag">MobSF</span>
-          <span class="skill-tag">Frida</span>
-          <span class="skill-tag">Objection</span>
-          <span class="skill-tag">JADX</span>
-          <span class="skill-tag">Apktool</span>
-          <span class="skill-tag">Genymotion</span>
-          <span class="skill-tag">Postman</span>
-          <span class="skill-tag">3uTools</span>
+          <span class="skill-tag">Burp Suite Pro</span><span class="skill-tag">OWASP ZAP</span>
+          <span class="skill-tag">Metasploit</span><span class="skill-tag">MobSF</span>
+          <span class="skill-tag">Frida</span><span class="skill-tag">Objection</span>
+          <span class="skill-tag">JADX</span><span class="skill-tag">Apktool</span>
+          <span class="skill-tag">Genymotion</span><span class="skill-tag">Postman</span><span class="skill-tag">3uTools</span>
         </div>
       </div>
       <div class="skill-card fade-up" style="transition-delay:.2s">
         <div class="skill-card-icon">📋</div>
-        <div class="skill-card-title">Standards & Compliance</div>
+        <div class="skill-card-title">Standards &amp; Compliance</div>
         <div class="skill-tags">
-          <span class="skill-tag">OWASP Top 10</span>
-          <span class="skill-tag">OWASP Mobile Top 10</span>
-          <span class="skill-tag">CWE/SANS 25</span>
-          <span class="skill-tag">SOC2</span>
-          <span class="skill-tag">GDPR</span>
-          <span class="skill-tag">Secure SDLC</span>
-          <span class="skill-tag">CVE Research</span>
+          <span class="skill-tag">OWASP Top 10</span><span class="skill-tag">OWASP Mobile Top 10</span>
+          <span class="skill-tag">CWE/SANS 25</span><span class="skill-tag">SOC2</span>
+          <span class="skill-tag">GDPR</span><span class="skill-tag">Secure SDLC</span><span class="skill-tag">CVE Research</span>
         </div>
       </div>
       <div class="skill-card fade-up" style="transition-delay:.3s">
         <div class="skill-card-icon">💻</div>
-        <div class="skill-card-title">Languages & Scripting</div>
+        <div class="skill-card-title">Languages &amp; Scripting</div>
         <div class="skill-tags">
-          <span class="skill-tag">Python</span>
-          <span class="skill-tag">Bash</span>
-          <span class="skill-tag">Java</span>
-          <span class="skill-tag">C++</span>
+          <span class="skill-tag">Python</span><span class="skill-tag">Bash</span>
+          <span class="skill-tag">Java</span><span class="skill-tag">C++</span>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ADVISORIES ── -->
+<section id="advisories">
+  <div class="container">
+    <p class="section-label">cat ./advisories/*.md</p>
+    <h2 class="section-title">Published <span>Advisories</span></h2>
+    <div class="section-divider"></div>
+    <div class="adv-grid">
+
+      <div class="adv-card fade-up">
+        <div class="adv-top"><span class="adv-id">CVE-2024-35581</span><span class="adv-sev">High</span></div>
+        <div class="adv-title">Stored XSS — Borrower Name</div>
+        <div class="adv-meta">CWE-79 · SourceCodester Laboratory Management System</div>
+        <div class="adv-desc">Stored cross-site scripting via the <code>lname</code> (Borrower Name) field in the Borrow workflow. Payload executes in the authenticated admin context on the borrow view page, enabling session theft and account takeover.</div>
+        <div class="adv-links">
+          <a href="cve-2024-35581.html" class="adv-link">read writeup →</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-35581" target="_blank" rel="noopener" class="adv-link ext">NVD ↗</a>
+        </div>
+      </div>
+
+      <div class="adv-card fade-up" style="transition-delay:.1s">
+        <div class="adv-top"><span class="adv-id">CVE-2024-35582</span><span class="adv-sev">High</span></div>
+        <div class="adv-title">Stored XSS — Department</div>
+        <div class="adv-meta">CWE-79 · SourceCodester Laboratory Management System</div>
+        <div class="adv-desc">Stored XSS via the <code>department</code> field of the same Borrow workflow — the second of three unencoded fields on one render sink, confirming a systemic missing output-encoding layer.</div>
+        <div class="adv-links">
+          <a href="cve-2024-35581.html" class="adv-link">read writeup →</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-35582" target="_blank" rel="noopener" class="adv-link ext">NVD ↗</a>
+        </div>
+      </div>
+
+      <div class="adv-card fade-up" style="transition-delay:.2s">
+        <div class="adv-top"><span class="adv-id">CVE-2024-35583</span><span class="adv-sev">High</span></div>
+        <div class="adv-title">Stored XSS — Remarks</div>
+        <div class="adv-meta">CWE-79 · SourceCodester Laboratory Management System</div>
+        <div class="adv-desc">Stored XSS via the free-text <code>remarks</code> field. Persistent payload re-fires for any user — including higher-privileged accounts — who opens the affected borrow record.</div>
+        <div class="adv-links">
+          <a href="cve-2024-35581.html" class="adv-link">read writeup →</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-35583" target="_blank" rel="noopener" class="adv-link ext">NVD ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── HALL OF FAME ── -->
+<section id="hall-of-fame">
+  <div class="container">
+    <p class="section-label">cat ./hall-of-fame.log</p>
+    <h2 class="section-title">Hall of <span>Fame</span></h2>
+    <div class="section-divider"></div>
+    <div class="hof-grid">
+
+      <div class="hof-card fade-up">
+        <div class="hof-head">
+          <div class="hof-mark">P</div>
+          <div><div class="hof-org">Philips</div><div class="hof-prog">Hall of Honors</div></div>
+        </div>
+        <div class="hof-desc">Acknowledged in the Philips Coordinated Vulnerability Disclosure <strong style="color:var(--text)">Hall of Honors</strong> for responsibly reporting a security vulnerability.</div>
+        <div class="hof-foot">
+          <a href="https://www.philips.com/a-w/security/coordinated-vulnerability-disclosure/hall-of-honors.html" target="_blank" rel="noopener" class="hof-link">view listing ↗</a>
+        </div>
+      </div>
+
+      <div class="hof-card fade-up" style="transition-delay:.1s">
+        <div class="hof-head">
+          <div class="hof-mark">IBM</div>
+          <div><div class="hof-org">IBM</div><div class="hof-prog">Security Acknowledgement</div></div>
+        </div>
+        <div class="hof-desc">Recognized by IBM's Product Security Incident Response Team for responsibly disclosing a security vulnerability.</div>
+        <div class="hof-foot"><span class="hof-static">Acknowledged</span></div>
+      </div>
+
+      <div class="hof-card fade-up" style="transition-delay:.2s">
+        <div class="hof-head">
+          <div class="hof-mark">C</div>
+          <div><div class="hof-org">Cisco</div><div class="hof-prog">Security Hall of Fame</div></div>
+        </div>
+        <div class="hof-desc">Listed in Cisco's Security Hall of Fame for responsibly reporting a security vulnerability through their disclosure program.</div>
+        <div class="hof-foot"><span class="hof-static">Acknowledged</span></div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -707,85 +896,61 @@
 <!-- ── PROJECTS ── -->
 <section id="projects">
   <div class="container">
-    <p class="section-label">04 / Projects</p>
+    <p class="section-label">ls ./research-and-tools</p>
     <h2 class="section-title">Research &amp; <span>Tools</span></h2>
     <div class="section-divider"></div>
     <div class="projects-grid">
 
-      <div class="project-card cve-highlight fade-up">
+      <div class="project-card fade-up">
         <div class="project-header">
           <div class="project-icon">🔍</div>
-          <div class="project-links">
-            <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-35581" target="_blank" class="project-link" title="NVD">↗</a>
-          </div>
+          <a href="cve-2024-35581.html" class="project-link" title="Writeup">↗</a>
         </div>
-        <div class="project-title">CVE Research & Vulnerability Disclosure</div>
-        <div class="project-desc">
-          Discovered and responsibly disclosed 3 CVEs — CVE-2024-35581, CVE-2024-35582, CVE-2024-35583 — through zero-day vulnerability research in web applications and open-source software. All published in the official MITRE and NVD databases.
-        </div>
+        <div class="project-title">CVE Research &amp; Disclosure</div>
+        <div class="project-desc">Discovered and responsibly disclosed 3 CVEs — CVE-2024-35581/35582/35583 — through zero-day vulnerability research in open-source web applications. All published in the official MITRE and NVD databases.</div>
         <div class="project-tags">
-          <span class="project-tag" style="color:var(--accent);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08)">CVE-2024-35581</span>
-          <span class="project-tag" style="color:var(--accent);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08)">CVE-2024-35582</span>
-          <span class="project-tag" style="color:var(--accent);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08)">CVE-2024-35583</span>
-          <span class="project-tag">Zero-Day Research</span>
-          <span class="project-tag">MITRE / NVD</span>
+          <span class="project-tag">Stored XSS</span><span class="project-tag">CWE-79</span>
+          <span class="project-tag">Zero-Day</span><span class="project-tag">MITRE / NVD</span>
         </div>
       </div>
 
-      <div class="project-card fade-up" style="transition-delay:.1s">
+      <div class="project-card featured fade-up" style="transition-delay:.1s">
         <div class="project-header">
-          <div class="project-icon">🔧</div>
-          <div class="project-links">
-            <a href="https://github.com/r04i7" target="_blank" class="project-link" title="GitHub">↗</a>
-          </div>
+          <div class="project-icon">🛡️</div>
+          <a href="https://github.com/r04i7/auth-auditor" target="_blank" rel="noopener" class="project-link" title="GitHub">↗</a>
         </div>
-        <div class="project-title">Burp Suite Extender — Issue Tracker</div>
-        <div class="project-desc">
-          Built an internal Burp Suite extension for PwC's assessment team to manage and track flagged/hidden vulnerabilities during engagements. Streamlines the vulnerability triage workflow and eliminates manual tracking overhead.
-        </div>
+        <div class="project-title">Auth Auditor</div>
+        <div class="bapp-badge">◉ Submitted to Burp BApp Store</div>
+        <div class="project-desc">Burp Suite extension for automated <strong style="color:var(--text)">SAML, OAuth 2.0 / OIDC, and JWT</strong> attack testing — runs the attack suite and returns clear pass/fail verdicts, turning a manual auth-testing checklist into one-click automation.</div>
         <div class="project-tags">
-          <span class="project-tag">Burp Suite</span>
-          <span class="project-tag">Java</span>
-          <span class="project-tag">Security Automation</span>
-          <span class="project-tag">Internal Tool</span>
+          <span class="project-tag">Burp Suite</span><span class="project-tag">SAML</span>
+          <span class="project-tag">OAuth 2.0 / OIDC</span><span class="project-tag">JWT</span>
         </div>
       </div>
 
       <div class="project-card fade-up" style="transition-delay:.2s">
         <div class="project-header">
-          <div class="project-icon">🍪</div>
-          <div class="project-links">
-            <a href="https://github.com/r04i7" target="_blank" class="project-link" title="GitHub">↗</a>
-          </div>
+          <div class="project-icon">🛰️</div>
+          <a href="https://github.com/r04i7/owasp-sentinel" target="_blank" rel="noopener" class="project-link" title="GitHub">↗</a>
         </div>
-        <div class="project-title">Session Cookie Analysis Tool</div>
-        <div class="project-desc">
-          Developed a specialized tool to identify session management weaknesses during web application assessments — analyzing cookie attributes, entropy, predictability, and security flags against OWASP session management standards.
-        </div>
+        <div class="project-title">OWASP Sentinel Pro</div>
+        <div class="project-desc">Real-time <strong style="color:var(--text)">passive OWASP Top 10</strong> scanner for Burp Suite, built on the Montoya API — with dedicated JWT, OAuth, and SAML detection modules that flag issues as you browse the target.</div>
         <div class="project-tags">
-          <span class="project-tag">Python</span>
-          <span class="project-tag">Session Security</span>
-          <span class="project-tag">OWASP</span>
-          <span class="project-tag">Web Security</span>
+          <span class="project-tag">Montoya API</span><span class="project-tag">Java</span>
+          <span class="project-tag">OWASP Top 10</span><span class="project-tag">Passive Scan</span>
         </div>
       </div>
 
       <div class="project-card fade-up" style="transition-delay:.3s">
         <div class="project-header">
-          <div class="project-icon">⚡</div>
-          <div class="project-links">
-            <a href="https://github.com/r04i7" target="_blank" class="project-link" title="GitHub">↗</a>
-          </div>
+          <div class="project-icon">🍪</div>
+          <a href="https://github.com/r04i7/burp-session-token-analyzer" target="_blank" rel="noopener" class="project-link" title="GitHub">↗</a>
         </div>
-        <div class="project-title">Penetration Testing Automation Suite</div>
-        <div class="project-desc">
-          Open-source collection of Python and Bash scripts for reconnaissance, vulnerability scanning, and exploit development. Designed scalable security testing frameworks that reduced manual testing time by 30% and improved reporting efficiency by 25%.
-        </div>
+        <div class="project-title">Burp Session Token Analyzer</div>
+        <div class="project-desc">Burp Suite extension that pinpoints the exact <strong style="color:var(--text)">cookie(s) or header(s)</strong> maintaining a session — with OR-group and minimal-combination detection to isolate precisely which tokens matter.</div>
         <div class="project-tags">
-          <span class="project-tag">Python</span>
-          <span class="project-tag">Bash</span>
-          <span class="project-tag">Reconnaissance</span>
-          <span class="project-tag">Open Source</span>
+          <span class="project-tag">Burp Suite</span><span class="project-tag">Session Security</span>
+          <span class="project-tag">Java</span><span class="project-tag">Web Security</span>
         </div>
       </div>
 
@@ -796,7 +961,7 @@
 <!-- ── CONTACT ── -->
 <section id="contact">
   <div class="container">
-    <p class="section-label">05 / Contact</p>
+    <p class="section-label">./connect --now</p>
     <h2 class="section-title">Let's <span>Connect</span></h2>
     <div class="section-divider"></div>
     <div class="contact-grid">
@@ -806,57 +971,33 @@
         </p>
         <div class="contact-links">
           <a href="mailto:er.rohitkumar1410@gmail.com" class="contact-link-item">
-            <span class="contact-link-icon">📧</span>
-            <div class="contact-link-info">
-              <span class="contact-link-label">Email</span>
-              <span class="contact-link-value">er.rohitkumar1410@gmail.com</span>
-            </div>
+            <span class="contact-link-icon">◇</span>
+            <div><div class="contact-link-label">Email</div><div class="contact-link-value">er.rohitkumar1410@gmail.com</div></div>
           </a>
-          <a href="https://linkedin.com/in/rohitkumar384" target="_blank" class="contact-link-item">
-            <span class="contact-link-icon">💼</span>
-            <div class="contact-link-info">
-              <span class="contact-link-label">LinkedIn</span>
-              <span class="contact-link-value">linkedin.com/in/rohitkumar384</span>
-            </div>
+          <a href="https://linkedin.com/in/rohitkumar384" target="_blank" rel="noopener" class="contact-link-item">
+            <span class="contact-link-icon">◇</span>
+            <div><div class="contact-link-label">LinkedIn</div><div class="contact-link-value">linkedin.com/in/rohitkumar384</div></div>
           </a>
-          <a href="https://github.com/r04i7" target="_blank" class="contact-link-item">
-            <span class="contact-link-icon">💻</span>
-            <div class="contact-link-info">
-              <span class="contact-link-label">GitHub</span>
-              <span class="contact-link-value">github.com/r04i7</span>
-            </div>
+          <a href="https://github.com/r04i7" target="_blank" rel="noopener" class="contact-link-item">
+            <span class="contact-link-icon">◇</span>
+            <div><div class="contact-link-label">GitHub</div><div class="contact-link-value">github.com/r04i7</div></div>
           </a>
           <a href="tel:+916290342545" class="contact-link-item">
-            <span class="contact-link-icon">📞</span>
-            <div class="contact-link-info">
-              <span class="contact-link-label">Phone</span>
-              <span class="contact-link-value">+91 6290342545</span>
-            </div>
+            <span class="contact-link-icon">◇</span>
+            <div><div class="contact-link-label">Phone</div><div class="contact-link-value">+91 6290342545</div></div>
           </a>
-          <a href="Rohit_Resume.pdf" download class="contact-link-item" style="border-color:rgba(0,212,255,.4);background:rgba(0,212,255,.05)">
-            <span class="contact-link-icon">📄</span>
-            <div class="contact-link-info">
-              <span class="contact-link-label">Resume</span>
-              <span class="contact-link-value">Download CV (PDF)</span>
-            </div>
+          <a href="Rohit_Resume.pdf" download class="contact-link-item" style="border-color:rgba(0,255,156,.4);background:rgba(0,255,156,.04)">
+            <span class="contact-link-icon">◇</span>
+            <div><div class="contact-link-label">Resume</div><div class="contact-link-value">Download CV (PDF)</div></div>
           </a>
         </div>
       </div>
       <div class="fade-up" style="transition-delay:.15s">
         <form class="contact-form" onsubmit="handleForm(event)">
-          <div class="form-group">
-            <label class="form-label">Your Name</label>
-            <input type="text" class="form-input" placeholder="John Doe" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email Address</label>
-            <input type="email" class="form-input" placeholder="john@company.com" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Message</label>
-            <textarea class="form-textarea" placeholder="Tell me about your security requirements..."></textarea>
-          </div>
-          <button type="submit" class="btn-primary" style="width:100%;border:none">Send Message →</button>
+          <div class="form-group"><label class="form-label">your_name</label><input type="text" class="form-input" placeholder="John Doe" required /></div>
+          <div class="form-group"><label class="form-label">email</label><input type="email" class="form-input" placeholder="john@company.com" required /></div>
+          <div class="form-group"><label class="form-label">message</label><textarea class="form-textarea" placeholder="Tell me about your security requirements..."></textarea></div>
+          <button type="submit" class="btn-primary" style="width:100%">send_message →</button>
         </form>
       </div>
     </div>
@@ -865,57 +1006,91 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  <p>Designed &amp; built by <a href="https://github.com/r04i7">Rohit Kumar</a> · Senior Application Security Engineer · Kolkata, India</p>
-  <p style="margin-top:.5rem;font-size:.72rem">© 2024 Rohit Kumar · All Rights Reserved</p>
+  <p>&gt; built &amp; maintained by <a href="https://github.com/r04i7">Rohit Kumar</a> · Senior Application Security Engineer · Kolkata, India</p>
+  <p class="sig">© 2026 Rohit Kumar · All Rights Reserved · <span style="color:var(--green)">stay curious, stay ethical</span></p>
 </footer>
 
+</div><!-- /.wrap -->
+
 <script>
+  // ── Matrix rain ──
+  (function () {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const c = document.getElementById('matrix'), ctx = c.getContext('2d');
+    const chars = 'ｱｲｳｴｵ01</>{}[]#$&*XSSCVE79'.split('');
+    let cols, drops, fs = 14;
+    function resize() {
+      c.width = window.innerWidth; c.height = window.innerHeight;
+      cols = Math.floor(c.width / fs);
+      drops = Array(cols).fill(1);
+    }
+    resize(); window.addEventListener('resize', resize);
+    function draw() {
+      ctx.fillStyle = 'rgba(5,7,10,0.08)';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.font = fs + 'px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const t = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillStyle = Math.random() > 0.985 ? '#00e5ff' : '#00ff9c';
+        ctx.fillText(t, i * fs, drops[i] * fs);
+        if (drops[i] * fs > c.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 55);
+  })();
+
+  // ── Boot log ──
+  (function () {
+    const lines = [
+      'loading modules ......... <span class="ok">[ ok ]</span>',
+      'burp-suite-pro .......... <span class="ok">[ ok ]</span>',
+      'recon engine ............ <span class="ok">[ ok ]</span>',
+      'access: authenticated ... <span class="ok">[ ok ]</span>'
+    ];
+    const box = document.getElementById('bootLog'); let i = 0;
+    (function next() {
+      if (i >= lines.length) return;
+      box.innerHTML += lines[i++] + '<br>';
+      setTimeout(next, 260);
+    })();
+  })();
+
   // ── Typing effect ──
-  const titles = [
-    'Senior Application Security Engineer',
-    'Penetration Tester',
-    'CVE Researcher',
-    'Security Automation Builder',
-  ];
-  let ti = 0, ci = 0, deleting = false;
-  const el = document.getElementById('typedTitle');
+  const titles = ['Senior Application Security Engineer','Penetration Tester','CVE Researcher','Security Automation Builder'];
+  let tIdx = 0, cIdx = 0, del = false;
+  const tEl = document.getElementById('typedTitle');
   function type() {
-    const t = titles[ti];
-    el.textContent = (deleting ? t.slice(0, ci--) : t.slice(0, ci++)) + '|';
-    if (!deleting && ci > t.length) { setTimeout(() => { deleting = true; type(); }, 1800); return; }
-    if (deleting && ci < 0) { deleting = false; ti = (ti + 1) % titles.length; ci = 0; }
-    setTimeout(type, deleting ? 40 : 80);
+    const t = titles[tIdx];
+    tEl.innerHTML = (del ? t.slice(0, cIdx--) : t.slice(0, cIdx++)) + '<span class="cursor">▊</span>';
+    if (!del && cIdx > t.length) { setTimeout(() => { del = true; type(); }, 1800); return; }
+    if (del && cIdx < 0) { del = false; tIdx = (tIdx + 1) % titles.length; cIdx = 0; }
+    setTimeout(type, del ? 35 : 70);
   }
-  type();
+  setTimeout(type, 1100);
 
   // ── Scroll animations ──
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
+  const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
   document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 
   // ── Mobile nav ──
-  document.getElementById('hamburger').addEventListener('click', () => {
-    document.getElementById('navLinks').classList.toggle('open');
-  });
+  document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
 
   // ── Form handler ──
   function handleForm(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button');
-    btn.textContent = 'Message Sent ✓';
-    btn.style.background = 'var(--green)';
-    btn.style.color = 'var(--bg)';
-    setTimeout(() => { btn.textContent = 'Send Message →'; btn.style.background = ''; btn.style.color = ''; e.target.reset(); }, 3000);
+    btn.textContent = 'message_sent ✓'; btn.style.background = 'var(--cyan)';
+    setTimeout(() => { btn.textContent = 'send_message →'; btn.style.background = ''; e.target.reset(); }, 3000);
   }
 
   // ── Active nav highlight ──
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
+  const secs = document.querySelectorAll('section[id]'), links = document.querySelectorAll('.nav-links a');
   window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
-    navLinks.forEach(a => { a.style.color = a.getAttribute('href') === '#' + current ? 'var(--cyan)' : ''; });
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    links.forEach(a => a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--green)' : '');
   });
 </script>
 </body>
